@@ -15,10 +15,10 @@ module.exports = {
         '2xl': '1366px',
       },
       colors: {
-        'cos-primary': '#1EDB8C',
+        primary: '#3B82F6',
       },
       backgroundImage: {
-        'cos-gradient': 'linear-gradient( 135deg, #ee9ca7 10%, #ffdde1 100%)',
+        'cos-gradient': 'linear-gradient( 135deg, #FDF2F8 10%, #fff 100%)',
         'cos-gradient-dark': 'linear-gradient(160deg, rgba(28,28,28,1) 0%, rgba(55,60,56,1) 100%)',
       },
       fontFamily: {

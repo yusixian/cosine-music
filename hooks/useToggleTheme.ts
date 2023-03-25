@@ -1,6 +1,6 @@
 import { useTheme } from 'next-themes';
 import { useCallback } from 'react';
-import { useMountedState } from 'react-use';
+import { useIsMounted } from './useIsMounted';
 import { useThrottle } from './useThrottle';
 
 /**
@@ -8,11 +8,11 @@ import { useThrottle } from './useThrottle';
  * @returns 切换主题的函数
  */
 export const useToggleTheme = () => {
-  const isMounted = useMountedState();
+  const isMounted = useIsMounted();
   const { theme, setTheme } = useTheme();
 
   const toggleTheme = useCallback(() => {
-    if (!isMounted()) return;
+    if (!isMounted) return null;
     setTheme(theme === 'light' ? 'dark' : 'light');
   }, [isMounted, setTheme, theme]);
 
