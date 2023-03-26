@@ -1,5 +1,4 @@
 import Card from '@/components/ui/Card';
-import Head from 'next/head';
 
 export default function Home() {
   return (

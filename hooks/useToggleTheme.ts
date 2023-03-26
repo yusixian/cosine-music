@@ -12,7 +12,7 @@ export const useToggleTheme = () => {
   const { theme, setTheme } = useTheme();
 
   const toggleTheme = useCallback(() => {
-    if (!isMounted) return null;
+    if (!isMounted) return;
     setTheme(theme === 'light' ? 'dark' : 'light');
   }, [isMounted, setTheme, theme]);
 
