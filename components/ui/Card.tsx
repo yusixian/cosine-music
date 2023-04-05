@@ -1,7 +1,5 @@
 import clsx from 'clsx';
-import { motion } from 'framer-motion';
 import { MouseEventHandler, ReactNode, useCallback } from 'react';
-import { useMountedState } from 'react-use';
 
 type CardProps = {
   title?: string;
@@ -15,10 +13,13 @@ type CardProps = {
 };
 const Card = ({ title, desc, children, onClick, href, className, clickable = false }: CardProps) => {
   const _clickable = clickable ?? (href || onClick);
-  const _onClick: MouseEventHandler<HTMLDivElement> = useCallback((e) => {
-    href && window?.open(href, '_blank');
-    onClick?.(e);
-  }, []);
+  const _onClick: MouseEventHandler<HTMLDivElement> = useCallback(
+    (e) => {
+      href && window?.open(href, '_blank');
+      onClick?.(e);
+    },
+    [href, onClick],
+  );
 
   return (
     <div
