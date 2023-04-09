@@ -27,7 +27,7 @@ const Login = () => {
 
   return (
     <>
-      <Tabs id="test" className="gap-2">
+      <Tabs id="test" className="gap-2" defaultActive={1}>
         <TabList>
           <Tab>Login</Tab>
           <Tab>Register</Tab>
@@ -99,75 +99,6 @@ const Login = () => {
           </form>
         </TabPanel>
       </Tabs>
-      <div className="flex h-screen flex-col items-center justify-center bg-gray-200">
-        <div className="rounded-lg bg-white p-8 shadow-lg">
-          <h2 className="mb-8 text-3xl font-bold">Login or Sign Up</h2>
-          <div className="flex flex-col space-y-4">
-            <form onSubmit={handleLoginSubmit} className="flex flex-col space-y-4">
-              <div className="flex flex-col">
-                <label htmlFor="username" className="mb-2 text-lg font-medium">
-                  Username
-                </label>
-                <input
-                  type="text"
-                  id="username"
-                  name="username"
-                  value={username}
-                  onChange={handleUsernameChange}
-                  className="rounded-lg border border-gray-400 px-3 py-2 focus:border-blue-500 focus:outline-none"
-                />
-              </div>
-              <div className="flex flex-col">
-                <label htmlFor="password" className="mb-2 text-lg font-medium">
-                  Password
-                </label>
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  value={password}
-                  onChange={handlePasswordChange}
-                  className="rounded-lg border border-gray-400 px-3 py-2 focus:border-blue-500 focus:outline-none"
-                />
-              </div>
-              <button type="submit" className="rounded-lg bg-blue-500 px-4 py-2 text-white">
-                Login
-              </button>
-            </form>
-            <form onSubmit={handleSignupSubmit} className="flex flex-col space-y-4">
-              <div className="flex flex-col">
-                <label htmlFor="username" className="mb-2 text-lg font-medium">
-                  Username
-                </label>
-                <input
-                  type="text"
-                  id="username"
-                  name="username"
-                  value={username}
-                  onChange={handleUsernameChange}
-                  className="rounded-lg border border-gray-400 px-3 py-2 focus:border-blue-500 focus:outline-none"
-                />
-              </div>
-              <div className="flex flex-col">
-                <label htmlFor="password" className="mb-2 text-lg font-medium">
-                  Password
-                </label>
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  value={password}
-                  onChange={handlePasswordChange}
-                  className="rounded-lg border border-gray-400 px-3 py-2 focus:border-blue-500 focus:outline-none"
-                />
-              </div>
-              <button type="submit" className="rounded-lg bg-green-500 px-4 py-2 text-white">
-                Sign Up
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
     </>
   );
 };

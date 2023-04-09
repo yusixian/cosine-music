@@ -13,7 +13,7 @@ export default function Layout({ children }: { children?: ReactNode }) {
       )}
     >
       <Header />
-      <main className="relative w-full overflow-auto">{children}</main>
+      <main className="relative w-full flex-grow overflow-auto">{children}</main>
       <Footer className="justify-end" />
     </div>
   );

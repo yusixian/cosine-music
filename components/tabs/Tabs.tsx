@@ -6,12 +6,13 @@ import TabList from './TabList';
 import TabPanel from './TabPanel';
 
 type TabsProps = {
+  defaultActive?: number;
   id?: string;
   className?: string;
   children?: ReactElement[];
 };
-function Tabs({ id = 'default', className, children }: TabsProps) {
-  const [selected, setSelected] = useState(0);
+function Tabs({ id = 'default', defaultActive, className, children }: TabsProps) {
+  const [selected, setSelected] = useState(defaultActive ?? 0);
   const [tabList, ...tabPanels] = children ?? [];
 
   if (!children?.length || children?.length <= 1) throw new Error('Tabs must have at least 2 children');

@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { FcMusic } from 'react-icons/fc';
-import { Navigator } from '../ui/Navigator';
+import { Navigator } from '../navigator';
 
 export function Header() {
   const router = useRouter();
