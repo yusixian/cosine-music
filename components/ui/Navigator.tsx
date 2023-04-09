@@ -3,11 +3,13 @@ import { useRouter } from 'next/router';
 import { useToggleTheme } from '@/hooks/useToggleTheme';
 import clsx from 'clsx';
 import { motion, Variants } from 'framer-motion';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { CgDarkMode, CgMenu, CgClose } from 'react-icons/cg';
-import { isMobile } from 'react-device-detect';
 import { useIsMounted } from '@/hooks/useIsMounted';
 import { AiFillGithub } from 'react-icons/ai';
+import { BiUserCircle } from 'react-icons/bi';
+import { useMediaQuery } from 'react-responsive';
+import { MD_SCREEN_QUERY } from '@/constants';
 
 const routers: {
   name?: string;
@@ -73,8 +75,8 @@ export const Navigator = ({ className }: NavigatorProps) => {
   const [selectIdx, setSelectIdx] = useState(0);
   const toggleTheme = useToggleTheme();
   const [mobileExpand, setMobileExpand] = useState(false);
+  const isMdScreen = useMediaQuery({ query: MD_SCREEN_QUERY });
   const isMounted = useIsMounted();
-
   const buttons = useMemo(
     () => [
       {
@@ -87,14 +89,32 @@ export const Navigator = ({ className }: NavigatorProps) => {
         icon: <CgDarkMode className="h-9 w-9 cursor-pointer" />,
         onClick: toggleTheme,
       },
+      {
+        key: 'BiUserCircle',
+        icon: <BiUserCircle className="h-9 w-9 cursor-pointer" />,
+        onClick: () => router.push('/my'),
+      },
     ],
-    [toggleTheme],
+    [router, toggleTheme],
   );
+
+  /** Set SelectIdx When Change Route */
+  useEffect(() => {
+    const path = router.pathname;
+    for (let i = 0; i < routers.length; i++) {
+      if (routers[i].path === path) {
+        console.log('setSelectIdx', i, path);
+        setSelectIdx(i);
+        break;
+      }
+    }
+    // router.pathname === '/' ? setSelectIdx(0) : setSelectIdx(1)
+  }, [router.pathname, setSelectIdx]);
 
   if (!isMounted) return null;
   return (
     <div className={clsx('flex items-center', className)}>
-      {isMobile ? (
+      {isMdScreen ? (
         <motion.nav initial={false} animate={mobileExpand ? 'open' : 'closed'} className="flex w-full justify-end">
           <motion.div
             whileTap={{ scale: 1.3 }}
