@@ -2,12 +2,15 @@ import { ClassValue } from 'clsx';
 import { useRouter } from 'next/router';
 import { useToggleTheme } from '@/hooks/useToggleTheme';
 import clsx from 'clsx';
-import { motion, Variants } from 'framer-motion';
-import { useMemo, useState } from 'react';
+import { motion } from 'framer-motion';
+import { useEffect, useMemo, useState } from 'react';
 import { CgDarkMode, CgMenu, CgClose } from 'react-icons/cg';
-import { isMobile } from 'react-device-detect';
 import { useIsMounted } from '@/hooks/useIsMounted';
 import { AiFillGithub } from 'react-icons/ai';
+import { BiUserCircle } from 'react-icons/bi';
+import { useMediaQuery } from 'react-responsive';
+import { MD_SCREEN_QUERY } from '@/constants';
+import NavItem from './NavItem';
 
 const routers: {
   name?: string;
@@ -20,61 +23,17 @@ const routers: {
   { name: '关于', path: '/about' },
 ];
 
-const itemVariants: Variants = {
-  open: {
-    opacity: 1,
-    y: 0,
-    transition: { type: 'spring', stiffness: 300, damping: 24 },
-  },
-  closed: { opacity: 0, y: 20, transition: { duration: 0.3 } },
-};
-
 type NavigatorProps = {
   className?: ClassValue;
 };
-
-type NavItemProps = {
-  selectIdx: number;
-  idx: number;
-  name?: string;
-  icon?: JSX.Element;
-  onClick: () => void;
-  className?: ClassValue;
-
-  indicatorClass?: string;
-};
-function NavItem({ selectIdx, idx, icon, name, onClick, className, indicatorClass }: NavItemProps) {
-  return (
-    <motion.li
-      variants={itemVariants}
-      className={clsx(
-        'relative flex cursor-pointer justify-center text-xl hover:opacity-70',
-        {
-          'text-primary': selectIdx === idx,
-        },
-        className,
-      )}
-      onClick={onClick}
-    >
-      {icon}
-      {name}
-      {selectIdx === idx && (
-        <motion.div
-          className={clsx('absolute inset-x-0 -bottom-1 border-t-2 border-primary', indicatorClass)}
-          layoutId="header_tab_selected"
-        />
-      )}
-    </motion.li>
-  );
-}
 
 export const Navigator = ({ className }: NavigatorProps) => {
   const router = useRouter();
   const [selectIdx, setSelectIdx] = useState(0);
   const toggleTheme = useToggleTheme();
   const [mobileExpand, setMobileExpand] = useState(false);
+  const isMdScreen = useMediaQuery({ query: MD_SCREEN_QUERY });
   const isMounted = useIsMounted();
-
   const buttons = useMemo(
     () => [
       {
@@ -87,14 +46,32 @@ export const Navigator = ({ className }: NavigatorProps) => {
         icon: <CgDarkMode className="h-9 w-9 cursor-pointer" />,
         onClick: toggleTheme,
       },
+      {
+        key: 'BiUserCircle',
+        icon: <BiUserCircle className="h-9 w-9 cursor-pointer" />,
+        onClick: () => router.push('/my'),
+      },
     ],
-    [toggleTheme],
+    [router, toggleTheme],
   );
+
+  /** Set SelectIdx When Change Route */
+  useEffect(() => {
+    const path = router.pathname;
+    for (let i = 0; i < routers.length; i++) {
+      if (routers[i].path === path) {
+        console.log('setSelectIdx', i, path);
+        setSelectIdx(i);
+        break;
+      }
+    }
+    // router.pathname === '/' ? setSelectIdx(0) : setSelectIdx(1)
+  }, [router.pathname, setSelectIdx]);
 
   if (!isMounted) return null;
   return (
     <div className={clsx('flex items-center', className)}>
-      {isMobile ? (
+      {isMdScreen ? (
         <motion.nav initial={false} animate={mobileExpand ? 'open' : 'closed'} className="flex w-full justify-end">
           <motion.div
             whileTap={{ scale: 1.3 }}
@@ -158,26 +135,24 @@ export const Navigator = ({ className }: NavigatorProps) => {
           >
             {routers.map(({ name, path, key }, idx) => (
               <NavItem
+                selected={selectIdx === idx}
                 className="px-1 py-1"
                 key={key ?? name}
                 onClick={() => {
                   router.push(path);
                   setSelectIdx(idx);
                 }}
-                selectIdx={selectIdx}
                 name={name}
-                idx={idx}
                 indicatorClass="inset-x-4"
               />
             ))}
             {buttons.map(({ key, icon, onClick }, idx) => (
               <NavItem
+                selected={selectIdx === routers.length + idx + 1}
                 className="px-1 py-1"
                 key={key}
                 onClick={onClick}
-                selectIdx={selectIdx}
                 icon={icon}
-                idx={routers.length + idx + 1}
               />
             ))}
           </motion.ul>
@@ -187,6 +162,7 @@ export const Navigator = ({ className }: NavigatorProps) => {
           <ul className="ml-4 flex h-full w-full flex-grow items-center gap-4">
             {routers.map(({ name, path, key }, idx) => (
               <NavItem
+                selected={selectIdx === idx}
                 indicatorClass="-bottom-2"
                 className="px-2"
                 key={key ?? name}
@@ -194,20 +170,17 @@ export const Navigator = ({ className }: NavigatorProps) => {
                   router.push(path);
                   setSelectIdx(idx);
                 }}
-                selectIdx={selectIdx}
                 name={name}
-                idx={idx}
               />
             ))}
             <div className="ml-auto flex items-center gap-1">
               {buttons.map(({ key, icon, onClick }, idx) => (
                 <NavItem
+                  selected={selectIdx === routers.length + idx + 1}
                   className="px-1 py-1"
                   key={key}
                   onClick={onClick}
-                  selectIdx={selectIdx}
                   icon={icon}
-                  idx={routers.length + idx + 1}
                 />
               ))}
             </div>

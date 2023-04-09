@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import { AnimatePresence } from 'framer-motion';
 import { poppins } from '../../constants/font';
 import { Footer } from './footer';
 import { Header } from './header';
@@ -14,9 +13,7 @@ export default function Layout({ children }: { children?: ReactNode }) {
       )}
     >
       <Header />
-      <main className="relative w-full flex-grow overflow-auto">
-        <AnimatePresence mode="wait">{children}</AnimatePresence>
-      </main>
+      <main className="relative w-full flex-grow overflow-auto">{children}</main>
       <Footer className="justify-end" />
     </div>
   );
