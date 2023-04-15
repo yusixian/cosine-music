@@ -1,15 +1,16 @@
-import { ClassValue } from 'clsx';
-import { useRouter } from 'next/router';
-import { useToggleTheme } from '@/hooks/useToggleTheme';
-import clsx from 'clsx';
-import { motion } from 'framer-motion';
-import { useEffect, useMemo, useState } from 'react';
-import { CgDarkMode, CgMenu, CgClose } from 'react-icons/cg';
+import { MD_SCREEN_QUERY } from '@/constants';
 import { useIsMounted } from '@/hooks/useIsMounted';
+import { useToggleTheme } from '@/hooks/useToggleTheme';
+import { userInfoAtom } from '@/store/user/state';
+import clsx, { ClassValue } from 'clsx';
+import { motion } from 'framer-motion';
+import { useRouter } from 'next/router';
+import { useEffect, useMemo, useState } from 'react';
 import { AiFillGithub } from 'react-icons/ai';
 import { BiUserCircle } from 'react-icons/bi';
+import { CgClose, CgDarkMode, CgMenu } from 'react-icons/cg';
 import { useMediaQuery } from 'react-responsive';
-import { MD_SCREEN_QUERY } from '@/constants';
+import { useRecoilValue } from 'recoil';
 import NavItem from './NavItem';
 
 const routers: {
@@ -34,6 +35,7 @@ export const Navigator = ({ className }: NavigatorProps) => {
   const [mobileExpand, setMobileExpand] = useState(false);
   const isMdScreen = useMediaQuery({ query: MD_SCREEN_QUERY });
   const isMounted = useIsMounted();
+  const userInfo = useRecoilValue(userInfoAtom);
   const buttons = useMemo(
     () => [
       {
@@ -48,11 +50,22 @@ export const Navigator = ({ className }: NavigatorProps) => {
       },
       {
         key: 'BiUserCircle',
-        icon: <BiUserCircle className="h-9 w-9 cursor-pointer" />,
+        icon: userInfo ? (
+          <div className="flex items-center justify-center gap-2">
+            <img
+              src={userInfo?.avatar || '/img/default_avatar.png'}
+              className="aspect-square h-9 rounded-full border-2 border-black"
+              alt={userInfo?.user_name}
+            />
+            {userInfo?.name || userInfo?.user_name}
+          </div>
+        ) : (
+          <BiUserCircle className="h-9 w-9 cursor-pointer" />
+        ),
         onClick: () => router.push('/my'),
       },
     ],
-    [router, toggleTheme],
+    [router, toggleTheme, userInfo],
   );
 
   /** Set SelectIdx When Change Route */

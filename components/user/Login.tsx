@@ -1,3 +1,4 @@
+import { useLogin } from '@/hooks/user';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import Tabs from '../tabs/Tabs';
 
@@ -6,6 +7,8 @@ const { Tab, TabPanel, TabList } = Tabs;
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
+  const mutationLogin = useLogin();
 
   const handleUsernameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setUsername(event.target.value);
@@ -17,7 +20,7 @@ const Login = () => {
 
   const handleLoginSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // TODO: Handle login submit
+    mutationLogin.mutate({ user_name: username, password });
   };
 
   const handleSignupSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -27,7 +30,7 @@ const Login = () => {
 
   return (
     <>
-      <Tabs id="test" className="gap-2" defaultActive={1}>
+      <Tabs id="test" className="gap-2">
         <TabList>
           <Tab>Login</Tab>
           <Tab>Register</Tab>
