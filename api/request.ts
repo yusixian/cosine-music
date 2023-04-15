@@ -13,10 +13,9 @@ const instance = axios.create({
 instance.interceptors.request.use(
   async (config) => {
     const token = (await localforage.getItem(STORAGE_KEY.USER_TOKEN)) ?? '';
-
     const newHeaders = {
       ...config.headers,
-      // Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     } as AxiosRequestHeaders;
     if (token) config.headers = newHeaders;
 

@@ -33,10 +33,10 @@ export interface User {
    * 用户名，唯一
    */
   user_name: string;
-	/**
-	 * 用户昵称
-	 */
-	name?: string
+  /**
+   * 用户昵称
+   */
+  name?: string;
   /**
    * 用户状态， "0": "正常",             "1": "被封禁"
    */
@@ -69,9 +69,13 @@ export type LoginParam = {
   user_name: string;
   password: string;
 };
-
 export type LoginResult = {
   sessionid: number;
   token: string;
   user: User;
+};
+
+export type RegisterParam = {
+  user_name: string;
+  password: string;
 };

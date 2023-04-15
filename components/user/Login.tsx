@@ -1,4 +1,4 @@
-import { useLogin } from '@/hooks/user';
+import { useLogin, useRegister } from '@/hooks/user';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import Tabs from '../tabs/Tabs';
 
@@ -9,6 +9,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
 
   const mutationLogin = useLogin();
+  const mutationRegister = useRegister();
 
   const handleUsernameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setUsername(event.target.value);
@@ -20,12 +21,14 @@ const Login = () => {
 
   const handleLoginSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    // TODO: Verify Param
     mutationLogin.mutate({ user_name: username, password });
   };
 
   const handleSignupSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // TODO: Handle signup submit
+    // TODO: Verify Param
+    mutationRegister.mutate({ user_name: username, password });
   };
 
   return (

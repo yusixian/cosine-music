@@ -57,7 +57,10 @@ export const Navigator = ({ className }: NavigatorProps) => {
               className="aspect-square h-9 rounded-full border-2 border-black"
               alt={userInfo?.user_name}
             />
-            {userInfo?.name || userInfo?.user_name}
+            <div className="flex flex-col items-center justify-center gap-1">
+              <p>{userInfo?.name}</p>
+              <p className="text-sm text-gray-500">@{userInfo?.name || userInfo?.user_name}</p>
+            </div>
           </div>
         ) : (
           <BiUserCircle className="h-9 w-9 cursor-pointer" />
@@ -73,7 +76,6 @@ export const Navigator = ({ className }: NavigatorProps) => {
     const path = router.pathname;
     for (let i = 0; i < routers.length; i++) {
       if (routers[i].path === path) {
-        console.log('setSelectIdx', i, path);
         setSelectIdx(i);
         break;
       }
