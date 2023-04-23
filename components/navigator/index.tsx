@@ -23,7 +23,24 @@ const routers: {
   { name: '我的', path: '/my' },
   { name: '关于', path: '/about' },
 ];
-
+const itemVariants = {
+  open: {
+    clipPath: 'inset(0% 0% 0% 0% round 10px)',
+    transition: {
+      ease: 'easeInOut',
+      duration: 0.4,
+      delayChildren: 0.3,
+      staggerChildren: 0.05,
+    },
+  },
+  closed: {
+    clipPath: 'inset(10% 50% 90% 50% round 10px)',
+    transition: {
+      ease: 'easeInOut',
+      duration: 0.2,
+    },
+  },
+};
 type NavigatorProps = {
   className?: ClassValue;
 };
@@ -128,24 +145,7 @@ export const Navigator = ({ className }: NavigatorProps) => {
               'fixed top-16 right-4 z-20 flex min-w-[7rem] flex-col items-stretch gap-1 rounded-2xl border border-secondary bg-tertiary py-2 shadow-xl dark:border-white dark:bg-gray-900',
               mobileExpand ? 'pointer-events-auto' : 'pointer-events-none',
             )}
-            variants={{
-              open: {
-                clipPath: 'inset(0% 0% 0% 0% round 10px)',
-                transition: {
-                  ease: 'easeInOut',
-                  duration: 0.4,
-                  delayChildren: 0.3,
-                  staggerChildren: 0.05,
-                },
-              },
-              closed: {
-                clipPath: 'inset(10% 50% 90% 50% round 10px)',
-                transition: {
-                  ease: 'easeInOut',
-                  duration: 0.2,
-                },
-              },
-            }}
+            variants={itemVariants}
             style={{ pointerEvents: mobileExpand ? 'auto' : 'none' }}
           >
             {routers.map(({ name, path, key }, idx) => (
@@ -173,34 +173,37 @@ export const Navigator = ({ className }: NavigatorProps) => {
           </motion.ul>
         </motion.nav>
       ) : (
-        <>
-          <ul className="ml-4 flex h-full w-full flex-grow items-center gap-4">
-            {routers.map(({ name, path, key }, idx) => (
+        <motion.ul
+          initial="closed"
+          animate="open"
+          variants={itemVariants}
+          className="ml-4 flex h-full w-full flex-grow items-center gap-4"
+        >
+          {routers.map(({ name, path, key }, idx) => (
+            <NavItem
+              selected={selectIdx === idx}
+              indicatorClass="-bottom-2"
+              className="px-2"
+              key={key ?? name}
+              onClick={() => {
+                router.push(path);
+                setSelectIdx(idx);
+              }}
+              name={name}
+            />
+          ))}
+          <div className="ml-auto flex items-center gap-1">
+            {buttons.map(({ key, icon, onClick }, idx) => (
               <NavItem
-                selected={selectIdx === idx}
-                indicatorClass="-bottom-2"
-                className="px-2"
-                key={key ?? name}
-                onClick={() => {
-                  router.push(path);
-                  setSelectIdx(idx);
-                }}
-                name={name}
+                selected={selectIdx === routers.length + idx + 1}
+                className="px-1 py-1"
+                key={key}
+                onClick={onClick}
+                icon={icon}
               />
             ))}
-            <div className="ml-auto flex items-center gap-1">
-              {buttons.map(({ key, icon, onClick }, idx) => (
-                <NavItem
-                  selected={selectIdx === routers.length + idx + 1}
-                  className="px-1 py-1"
-                  key={key}
-                  onClick={onClick}
-                  icon={icon}
-                />
-              ))}
-            </div>
-          </ul>
-        </>
+          </div>
+        </motion.ul>
       )}
     </div>
   );

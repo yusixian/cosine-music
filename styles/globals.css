@@ -28,9 +28,34 @@
     @apply bg-primary;
     border-radius: 0.5rem;
   }
+  @font-face {
+    font-display: block;
+    font-family: 'Nagoda';
+    font-style: normal;
+    src: local('Nagoda'), url('/fonts/Nagoda.ttf');
+  }
 }
 
 @layer components {
+  .font-nagoda {
+    font-family: 'Nagoda';
+  }
+
+  .cos-logo {
+    @apply relative h-[2.25rem] w-[12rem] text-3xl text-transparent;
+  }
+  .cos-logo::before {
+    @apply font-nagoda absolute inset-0 text-clip bg-gradient-pink;
+    content: 'Cosine Music';
+    background-clip: text;
+    z-index: 1;
+  }
+  .cos-logo::after {
+    @apply font-nagoda absolute inset-0 text-transparent;
+    content: 'Cosine Music';
+    text-shadow: 0.1875rem 0.1875rem 0 rgba(249, 99, 117, 0.6);
+    z-index: 0;
+  }
 }
 
 @layer utilities {

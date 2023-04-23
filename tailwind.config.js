@@ -20,8 +20,9 @@ module.exports = {
         tertiary: '#FFE3EA',
       },
       backgroundImage: {
-        'cos-gradient': 'linear-gradient( 135deg, #FDF2F8 10%, #fff 100%)',
-        'cos-gradient-dark': 'linear-gradient(160deg, rgba(28,28,28,1) 0%, rgba(55,60,56,1) 100%)',
+        'cos-gradient-main': 'linear-gradient(135deg, #FDF2F8 10%, #fff 100%)',
+        'cos-gradient-main-dark': 'linear-gradient(160deg, rgba(28,28,28,1) 0%, rgba(55,60,56,1) 100%)',
+        'gradient-pink': 'linear-gradient(279deg, rgba(249,102,118,1) 0%, rgba(233,30,99,1) 100%)',
       },
       fontFamily: {
         poppins: 'var(--font-poppins)',

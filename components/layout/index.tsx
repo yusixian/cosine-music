@@ -11,7 +11,7 @@ export default function Layout({ children }: { children?: ReactNode }) {
   return (
     <div
       className={clsx(
-        'flex h-screen min-h-screen flex-col bg-cos-gradient text-black dark:bg-cos-gradient-dark dark:text-white',
+        'flex h-screen min-h-screen flex-col bg-cos-gradient-main text-black dark:bg-cos-gradient-main-dark dark:text-white',
         poppins.variable,
       )}
     >
