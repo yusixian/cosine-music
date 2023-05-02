@@ -1,5 +1,6 @@
 import { useLogin, useRegister } from '@/hooks/user';
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { Button, TextField } from '@mui/material';
+import { FormEvent, useState } from 'react';
 import Tabs from '../tabs/Tabs';
 
 const { Tab, TabPanel, TabList } = Tabs;
@@ -11,17 +12,10 @@ const Login = () => {
   const mutationLogin = useLogin();
   const mutationRegister = useRegister();
 
-  const handleUsernameChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setUsername(event.target.value);
-  };
-
-  const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setPassword(event.target.value);
-  };
-
   const handleLoginSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // TODO: Verify Param
+    console.log(username, password);
     mutationLogin.mutate({ user_name: username, password });
   };
 
@@ -33,75 +27,55 @@ const Login = () => {
 
   return (
     <>
-      <Tabs id="test" className="gap-2">
+      <Tabs className="gap-2">
         <TabList>
           <Tab>Login</Tab>
           <Tab>Register</Tab>
         </TabList>
         <TabPanel enableAnim>
-          <form onSubmit={handleLoginSubmit} className="flex flex-col space-y-4">
-            <div className="flex flex-col">
-              <label htmlFor="username" className="mb-2 text-lg font-medium">
-                Username
-              </label>
-              <input
-                type="text"
-                id="username"
-                name="username"
-                value={username}
-                onChange={handleUsernameChange}
-                className="rounded-lg border border-gray-400 px-3 py-2 focus:border-blue-500 focus:outline-none"
-              />
-            </div>
-            <div className="flex flex-col">
-              <label htmlFor="password" className="mb-2 text-lg font-medium">
-                Password
-              </label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                value={password}
-                onChange={handlePasswordChange}
-                className="rounded-lg border border-gray-400 px-3 py-2 focus:border-blue-500 focus:outline-none"
-              />
-            </div>
-            <button type="submit" className="rounded-lg bg-blue-500 px-4 py-2 text-white">
+          <form onSubmit={handleLoginSubmit} className="flex flex-col gap-4 py-4">
+            <TextField
+              onChange={(e) => setUsername(e.currentTarget.value)}
+              required
+              fullWidth
+              id="username"
+              label="Username"
+              placeholder="用户名"
+            />
+            <TextField
+              onChange={(e) => setPassword(e.currentTarget.value)}
+              required
+              fullWidth
+              id="password"
+              label="Password"
+              placeholder="密码，至少6个字符"
+            />
+            <Button variant="contained" type="submit">
               Login
-            </button>
+            </Button>
           </form>
         </TabPanel>
         <TabPanel enableAnim>
-          <form onSubmit={handleSignupSubmit} className="flex flex-col space-y-4">
-            <div className="flex flex-col">
-              <label htmlFor="username" className="mb-2 text-lg font-medium">
-                Username
-              </label>
-              <input
-                type="text"
-                id="username"
-                name="username"
-                value={username}
-                onChange={handleUsernameChange}
-                className="rounded-lg border border-gray-400 px-3 py-2 focus:border-blue-500 focus:outline-none"
-              />
-            </div>
-            <div className="flex flex-col">
-              <label htmlFor="password" className="mb-2 text-lg font-medium">
-                Password
-              </label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                value={password}
-                onChange={handlePasswordChange}
-                className="rounded-lg border border-gray-400 px-3 py-2 focus:border-blue-500 focus:outline-none"
-              />
-            </div>
-            <button type="submit" className="rounded-lg bg-green-500 px-4 py-2 text-white">
+          <form onSubmit={handleSignupSubmit} className="flex flex-col gap-4 py-4">
+            <TextField
+              required
+              fullWidth
+              id="username"
+              label="Username"
+              placeholder="用户名"
+              onChange={(e) => setUsername(e.currentTarget.value)}
+            />
+            <TextField
+              required
+              fullWidth
+              id="password"
+              label="Password"
+              placeholder="密码，至少6个字符"
+              onChange={(e) => setPassword(e.currentTarget.value)}
+            />
+            <Button variant="contained" type="submit" color="secondary">
               Sign Up
-            </button>
+            </Button>
           </form>
         </TabPanel>
       </Tabs>

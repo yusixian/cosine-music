@@ -12,6 +12,7 @@ import { CgClose, CgDarkMode, CgMenu } from 'react-icons/cg';
 import { useMediaQuery } from 'react-responsive';
 import { useRecoilValue } from 'recoil';
 import NavItem from './NavItem';
+import { Avatar } from '@mui/material';
 
 const routers: {
   name?: string;
@@ -69,11 +70,7 @@ export const Navigator = ({ className }: NavigatorProps) => {
         key: 'BiUserCircle',
         icon: userInfo ? (
           <div className="flex items-center justify-center gap-2">
-            <img
-              src={userInfo?.avatar || '/img/default_avatar.png'}
-              className="aspect-square h-9 rounded-full border-2 border-black"
-              alt={userInfo?.user_name}
-            />
+            <Avatar alt={userInfo?.user_name} src={userInfo?.avatar || '/img/default_avatar.png'} />
             <div className="flex flex-col items-center justify-center gap-1">
               <p>{userInfo?.name}</p>
               <p className="text-sm text-gray-500">@{userInfo?.name || userInfo?.user_name}</p>
