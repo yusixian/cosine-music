@@ -5,5 +5,5 @@ import Login from './Login';
 
 export default function LoginDialog() {
   const [open, setOpen] = useRecoilState(userLoginDialogAtom);
-  return <Dialog showCloseButton className="p-8" open={open} onOpenChange={setOpen} render={({}) => <Login />} />;
+  return <Dialog showCloseButton className="p-8" open={open} onOpenChange={setOpen} render={() => <Login />} />;
 }

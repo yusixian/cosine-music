@@ -46,6 +46,7 @@ const Login = () => {
               onChange={(e) => setPassword(e.currentTarget.value)}
               required
               fullWidth
+              type="password"
               id="password"
               label="Password"
               placeholder="密码，至少6个字符"
@@ -68,6 +69,7 @@ const Login = () => {
             <TextField
               required
               fullWidth
+              type="password"
               id="password"
               label="Password"
               placeholder="密码，至少6个字符"

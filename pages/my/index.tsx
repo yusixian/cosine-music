@@ -7,9 +7,9 @@ import { AiOutlineMan, AiOutlineQuestion, AiOutlineWoman } from 'react-icons/ai'
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 const sexIconMap = {
-  [UserSex.UNKNOWN]: <AiOutlineQuestion className="h-9 w-9" />,
-  [UserSex.FEMALE]: <AiOutlineWoman className="h-9 w-9 text-pink-500" />,
-  [UserSex.MALE]: <AiOutlineMan className="h-9 w-9 text-blue-500" />,
+  [UserSex.UNKNOWN]: <AiOutlineQuestion className="h-9 w-9 md:h-6 md:w-6" />,
+  [UserSex.FEMALE]: <AiOutlineWoman className="h-9 w-9 text-pink-500 md:h-6 md:w-6" />,
+  [UserSex.MALE]: <AiOutlineMan className="h-9 w-9 text-blue-500 md:h-6 md:w-6" />,
 };
 export default function My() {
   const setLoginOpen = useSetRecoilState(userLoginDialogAtom);
@@ -22,11 +22,11 @@ export default function My() {
           <div className="flex gap-4">
             <Avatar
               alt={userInfo?.user_name}
-              className="h-40 w-40 cursor-pointer"
+              className="h-40 w-40 cursor-pointer md:h-20 md:w-20"
               src={userInfo?.avatar || '/img/default_avatar.png'}
             />
             <div className="flex-grow">
-              <div className="flex items-center justify-between gap-4 text-lg">
+              <div className="flex flex-wrap items-center justify-between gap-4 text-lg">
                 <div>
                   <p className="text-2xl font-bold">{userInfo?.name}</p>
                   <p className="text-gray-500">@{userInfo?.name || userInfo?.user_name}</p>
