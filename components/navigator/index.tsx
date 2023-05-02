@@ -1,15 +1,16 @@
-import { ClassValue } from 'clsx';
-import { useRouter } from 'next/router';
-import { useToggleTheme } from '@/hooks/useToggleTheme';
-import clsx from 'clsx';
-import { motion } from 'framer-motion';
-import { useEffect, useMemo, useState } from 'react';
-import { CgDarkMode, CgMenu, CgClose } from 'react-icons/cg';
+import { MD_SCREEN_QUERY } from '@/constants';
 import { useIsMounted } from '@/hooks/useIsMounted';
+import { useToggleTheme } from '@/hooks/useToggleTheme';
+import { userInfoAtom } from '@/store/user/state';
+import clsx, { ClassValue } from 'clsx';
+import { motion } from 'framer-motion';
+import { useRouter } from 'next/router';
+import { useEffect, useMemo, useState } from 'react';
 import { AiFillGithub } from 'react-icons/ai';
 import { BiUserCircle } from 'react-icons/bi';
+import { CgClose, CgDarkMode, CgMenu } from 'react-icons/cg';
 import { useMediaQuery } from 'react-responsive';
-import { MD_SCREEN_QUERY } from '@/constants';
+import { useRecoilValue } from 'recoil';
 import NavItem from './NavItem';
 
 const routers: {
@@ -22,7 +23,24 @@ const routers: {
   { name: '我的', path: '/my' },
   { name: '关于', path: '/about' },
 ];
-
+const itemVariants = {
+  open: {
+    clipPath: 'inset(0% 0% 0% 0% round 10px)',
+    transition: {
+      ease: 'easeInOut',
+      duration: 0.4,
+      delayChildren: 0.3,
+      staggerChildren: 0.05,
+    },
+  },
+  closed: {
+    clipPath: 'inset(10% 50% 90% 50% round 10px)',
+    transition: {
+      ease: 'easeInOut',
+      duration: 0.2,
+    },
+  },
+};
 type NavigatorProps = {
   className?: ClassValue;
 };
@@ -34,6 +52,7 @@ export const Navigator = ({ className }: NavigatorProps) => {
   const [mobileExpand, setMobileExpand] = useState(false);
   const isMdScreen = useMediaQuery({ query: MD_SCREEN_QUERY });
   const isMounted = useIsMounted();
+  const userInfo = useRecoilValue(userInfoAtom);
   const buttons = useMemo(
     () => [
       {
@@ -48,11 +67,25 @@ export const Navigator = ({ className }: NavigatorProps) => {
       },
       {
         key: 'BiUserCircle',
-        icon: <BiUserCircle className="h-9 w-9 cursor-pointer" />,
+        icon: userInfo ? (
+          <div className="flex items-center justify-center gap-2">
+            <img
+              src={userInfo?.avatar || '/img/default_avatar.png'}
+              className="aspect-square h-9 rounded-full border-2 border-black"
+              alt={userInfo?.user_name}
+            />
+            <div className="flex flex-col items-center justify-center gap-1">
+              <p>{userInfo?.name}</p>
+              <p className="text-sm text-gray-500">@{userInfo?.name || userInfo?.user_name}</p>
+            </div>
+          </div>
+        ) : (
+          <BiUserCircle className="h-9 w-9 cursor-pointer" />
+        ),
         onClick: () => router.push('/my'),
       },
     ],
-    [router, toggleTheme],
+    [router, toggleTheme, userInfo],
   );
 
   /** Set SelectIdx When Change Route */
@@ -60,7 +93,6 @@ export const Navigator = ({ className }: NavigatorProps) => {
     const path = router.pathname;
     for (let i = 0; i < routers.length; i++) {
       if (routers[i].path === path) {
-        console.log('setSelectIdx', i, path);
         setSelectIdx(i);
         break;
       }
@@ -113,24 +145,7 @@ export const Navigator = ({ className }: NavigatorProps) => {
               'fixed top-16 right-4 z-20 flex min-w-[7rem] flex-col items-stretch gap-1 rounded-2xl border border-secondary bg-tertiary py-2 shadow-xl dark:border-white dark:bg-gray-900',
               mobileExpand ? 'pointer-events-auto' : 'pointer-events-none',
             )}
-            variants={{
-              open: {
-                clipPath: 'inset(0% 0% 0% 0% round 10px)',
-                transition: {
-                  ease: 'easeInOut',
-                  duration: 0.4,
-                  delayChildren: 0.3,
-                  staggerChildren: 0.05,
-                },
-              },
-              closed: {
-                clipPath: 'inset(10% 50% 90% 50% round 10px)',
-                transition: {
-                  ease: 'easeInOut',
-                  duration: 0.2,
-                },
-              },
-            }}
+            variants={itemVariants}
             style={{ pointerEvents: mobileExpand ? 'auto' : 'none' }}
           >
             {routers.map(({ name, path, key }, idx) => (
@@ -158,34 +173,37 @@ export const Navigator = ({ className }: NavigatorProps) => {
           </motion.ul>
         </motion.nav>
       ) : (
-        <>
-          <ul className="ml-4 flex h-full w-full flex-grow items-center gap-4">
-            {routers.map(({ name, path, key }, idx) => (
+        <motion.ul
+          initial="closed"
+          animate="open"
+          variants={itemVariants}
+          className="ml-4 flex h-full w-full flex-grow items-center gap-4"
+        >
+          {routers.map(({ name, path, key }, idx) => (
+            <NavItem
+              selected={selectIdx === idx}
+              indicatorClass="-bottom-2"
+              className="px-2"
+              key={key ?? name}
+              onClick={() => {
+                router.push(path);
+                setSelectIdx(idx);
+              }}
+              name={name}
+            />
+          ))}
+          <div className="ml-auto flex items-center gap-1">
+            {buttons.map(({ key, icon, onClick }, idx) => (
               <NavItem
-                selected={selectIdx === idx}
-                indicatorClass="-bottom-2"
-                className="px-2"
-                key={key ?? name}
-                onClick={() => {
-                  router.push(path);
-                  setSelectIdx(idx);
-                }}
-                name={name}
+                selected={selectIdx === routers.length + idx + 1}
+                className="px-1 py-1"
+                key={key}
+                onClick={onClick}
+                icon={icon}
               />
             ))}
-            <div className="ml-auto flex items-center gap-1">
-              {buttons.map(({ key, icon, onClick }, idx) => (
-                <NavItem
-                  selected={selectIdx === routers.length + idx + 1}
-                  className="px-1 py-1"
-                  key={key}
-                  onClick={onClick}
-                  icon={icon}
-                />
-              ))}
-            </div>
-          </ul>
-        </>
+          </div>
+        </motion.ul>
       )}
     </div>
   );
