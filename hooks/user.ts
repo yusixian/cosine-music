@@ -25,7 +25,7 @@ export const useLogin = () => {
     onError: (err) => {
       console.error(err.message);
       const errMsg = err?.response?.data?.message;
-      toast.error(errMsg);
+      toast.error(errMsg ?? '登录失败！');
     },
   });
 };
@@ -45,7 +45,7 @@ export const useRegister = () => {
     onError: (err) => {
       console.error(err.message);
       const errMsg = err?.response?.data?.message;
-      toast.error(errMsg);
+      toast.error(errMsg ?? '注册失败！');
     },
   });
 };

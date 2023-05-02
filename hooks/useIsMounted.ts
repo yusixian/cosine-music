@@ -1,5 +1,4 @@
-import { useRef, useEffect, useCallback, useState } from 'react';
-import _ from 'lodash-es';
+import { useEffect, useState } from 'react';
 
 export function useIsMounted() {
   const [isMounted, setIsMounted] = useState(false);

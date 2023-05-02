@@ -11,11 +11,11 @@ export default function Layout({ children }: { children?: ReactNode }) {
   return (
     <div
       className={clsx(
-        'flex h-screen min-h-screen flex-col bg-cos-gradient-main text-black dark:bg-cos-gradient-main-dark dark:text-white',
+        'flex h-screen min-h-screen flex-col overflow-auto bg-cos-gradient-main text-black dark:bg-cos-gradient-main-dark dark:text-white',
         poppins.variable,
       )}
     >
-      <ToastContainer className="z-20" position="top-center" autoClose={3000} closeButton={false} />
+      <ToastContainer className="z-30" position="top-center" autoClose={3000} closeButton={false} />
       <Header />
       <main className="relative w-full flex-grow overflow-auto">{children}</main>
       <Footer className="justify-end" />
