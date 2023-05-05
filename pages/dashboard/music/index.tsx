@@ -1,6 +1,6 @@
 import DashboardLayout from '@/components/dashboard/layout';
-import { Breadcrumbs, Link, Typography } from '@mui/material';
-
+import MusicManageTable from '@/components/dashboard/music/MusicManageTable';
+import { Breadcrumbs, Link, Stack, Typography } from '@mui/material';
 function DMusic() {
   return (
     <main className="mx-auto flex max-w-screen-lg flex-col gap-3 p-4">
@@ -10,13 +10,9 @@ function DMusic() {
         </Link>
         <Typography color="text.primary">音乐管理</Typography>
       </Breadcrumbs>
-      <div className="h-60 w-full">1111</div>
-      <div className="h-60 w-full">1111</div>
-      <div className="h-60 w-full">1111</div>
-      <div className="h-60 w-full">1111</div>
-      <div className="h-60 w-full">1111</div>
-      <div className="h-60 w-full">1111</div>
-      <div className="h-60 w-full">22222</div>
+      <Stack className="h- flex-grow overflow-auto">
+        <MusicManageTable />
+      </Stack>
     </main>
   );
 }

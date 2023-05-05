@@ -6,7 +6,7 @@ import { UserType } from '@/api/type';
 import { poppins } from '@/constants/font';
 import { useFetchUserInfoByAuth } from '@/hooks/user';
 import { userInfoAtom } from '@/store/user/state';
-import { AppBar, IconButton, PaletteMode, StyledEngineProvider, Toolbar, Typography } from '@mui/material';
+import { AppBar, Box, IconButton, PaletteMode, StyledEngineProvider, Toolbar, Typography } from '@mui/material';
 import { ThemeProvider as MaterialThemeProvider, createTheme } from '@mui/material/styles';
 import { useTheme } from 'next-themes';
 import { MdArrowBackIosNew, MdMenu } from 'react-icons/md';
@@ -42,7 +42,7 @@ export default function DashboardLayout({ children }: { children?: ReactNode }) 
       <MaterialThemeProvider theme={themeOptions}>
         <div
           className={clsx(
-            'flex h-screen flex-col overflow-hidden bg-cos-gradient-main text-black dark:bg-cos-gradient-main-dark dark:text-white',
+            'flex h-screen min-h-screen flex-col overflow-hidden bg-cos-gradient-main text-black dark:bg-cos-gradient-main-dark dark:text-white',
             poppins.variable,
           )}
         >
@@ -72,9 +72,13 @@ export default function DashboardLayout({ children }: { children?: ReactNode }) 
               <Search />
             </Toolbar>
           </AppBar>
-          <div className="flex flex-grow">
-            <DashboardNavigator open={menuOpen} />
-            {userInfo && userInfo?.type === UserType.ADMIN && <main className="flex-grow">{children}</main>}
+          <div className="flex h-full overflow-auto">
+            <DashboardNavigator open={menuOpen} className="h-full" />
+            {userInfo && userInfo?.type === UserType.ADMIN && (
+              <Box component="main" className="h-full overflow-auto" sx={{ flexGrow: 1, bgcolor: 'background.default' }}>
+                {children}
+              </Box>
+            )}
           </div>
         </div>
       </MaterialThemeProvider>

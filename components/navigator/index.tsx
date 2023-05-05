@@ -51,7 +51,13 @@ type NavigatorProps = {
 
 export const Navigator = ({ className }: NavigatorProps) => {
   const router = useRouter();
-  const [selectIdx, setSelectIdx] = useState(0);
+
+  const [selectIdx, setSelectIdx] = useState(() => {
+    const path = router.pathname || '/';
+    const idx = routers.findIndex((r) => r.path === path);
+    // toast.info(idx);
+    return idx;
+  });
   const toggleTheme = useToggleTheme();
   const [mobileExpand, setMobileExpand] = useState(false);
   const isMdScreen = useMediaQuery({ query: MD_SCREEN_QUERY });

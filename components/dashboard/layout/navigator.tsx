@@ -30,7 +30,11 @@ export default function DashboardNavigator({ className, open }: { className?: st
   const toggleTheme = useToggleTheme();
   const userInfo = useRecoilValue(userInfoAtom);
   const router = useRouter();
-  const [selectIdx, setSelectIdx] = useState(0);
+  const [selectIdx, setSelectIdx] = useState(() => {
+    const path = router.pathname.slice(10) || '/';
+    const idx = routers.findIndex((r) => r.path === path);
+    return idx;
+  });
 
   const buttons = useMemo(
     () => [

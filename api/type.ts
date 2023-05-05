@@ -72,6 +72,28 @@ export interface User {
   updatedAt?: string;
 }
 
+export enum MusicStatus {
+  UNAUDITED = 0,
+  NORMAL,
+  BANNED,
+}
+
+export type MusicDetail = {
+  id: number; // 音乐id
+  title: string; // 音乐标题
+  coverUrl?: string; // 封面图片路径
+  url: string; // 歌曲资源路径
+  playCount: number; // 播放量
+  foreignArtist?: string; // 不在本平台的歌手名称
+  artistId?: number; // 歌手id
+  lyric?: string; // lrc格式歌词
+  lyricAuthorId?: number; // 歌词贡献者id
+  status: MusicStatus; // 0:未审核 1:正常 2:封禁
+  createdAt: string;
+  updatedAt?: string;
+  deletedAt?: string;
+};
+
 export type LoginParam = {
   user_name: string;
   password: string;
