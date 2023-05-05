@@ -1,5 +1,11 @@
+import { UserType } from '@/api/type';
+import { userInfoAtom } from '@/store/user/state';
+import { Button } from '@mui/material';
 import clsx, { ClassValue } from 'clsx';
 import { Variants, motion } from 'framer-motion';
+import { useRecoilValue } from 'recoil';
+import { MdSend } from 'react-icons/md';
+
 const itemVariants: Variants = {
   open: {
     opacity: 1,
@@ -15,12 +21,22 @@ type NavItemProps = {
   icon?: JSX.Element;
   onClick: () => void;
   className?: ClassValue;
-
+  type?: UserType;
   indicatorClass?: string;
 };
-function NavItem({ selected, icon, name, onClick, className, indicatorClass }: NavItemProps) {
+function NavItem({ selected, icon, name, onClick, className, indicatorClass, type }: NavItemProps) {
+  const userInfo = useRecoilValue(userInfoAtom);
+
+  if (type === UserType.ADMIN && userInfo?.type === UserType.ADMIN)
+    return (
+      <motion.div variants={itemVariants}>
+        <Button onClick={onClick} variant="contained" size="large" endIcon={<MdSend />}>
+          {name}
+        </Button>
+      </motion.div>
+    );
   return (
-    <motion.li
+    <motion.div
       variants={itemVariants}
       className={clsx(
         'relative flex cursor-pointer justify-center text-xl hover:opacity-70',
@@ -39,7 +55,7 @@ function NavItem({ selected, icon, name, onClick, className, indicatorClass }: N
           layoutId="header_tab_selected"
         />
       )}
-    </motion.li>
+    </motion.div>
   );
 }
 export default NavItem;

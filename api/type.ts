@@ -19,6 +19,10 @@ export type Response<T> = {
   result: T | null;
 };
 
+export enum UserType {
+  NORMAL = 0,
+  ADMIN,
+}
 export enum UserStatus {
   NORMAL = 0,
   BANNED,
@@ -44,7 +48,7 @@ export interface User {
   /**
    * 用户类型，"0": "普通用户",             "1": "管理员"
    */
-  type: number;
+  type: UserType;
   /**
    * 用户头像
    */
@@ -63,6 +67,9 @@ export interface User {
    * "2": "男"
    */
   sex?: UserSex;
+
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export type LoginParam = {
