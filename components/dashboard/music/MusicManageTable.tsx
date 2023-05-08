@@ -13,30 +13,81 @@ import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import { visuallyHidden } from '@mui/utils';
 import { Image } from 'antd';
+import { useRouter } from 'next/router';
 import { useMemo } from 'react';
-import { MdAdd } from 'react-icons/md';
+import { MdAdd, MdEdit, MdPlayCircle } from 'react-icons/md';
+import { toast } from 'react-toastify';
 
-function createData(id: number, title: string, coverUrl: string): MusicItem {
+function createData(id: number, title: string, coverUrl: string, playCount: number, artist?: string, url?: string): MusicItem {
   return {
     id,
     title,
     coverUrl,
+    playCount,
+    artist,
+    url,
   };
 }
 
 const rows = [
-  createData(1, 'Cupcake', 'http://p1.music.126.net/mLJ_pKshFVtboLyD-4nBdA==/109951168573694568.jpg?param=130y130'),
-  createData(2, 'Donut', 'http://p1.music.126.net/mLJ_pKshFVtboLyD-4nBdA==/109951168573694568.jpg?param=130y130'),
-  createData(3, 'Eclair', 'http://p1.music.126.net/mLJ_pKshFVtboLyD-4nBdA==/109951168573694568.jpg?param=130y130'),
-  createData(4, 'Frozen yoghurt', 'http://p1.music.126.net/mLJ_pKshFVtboLyD-4nBdA==/109951168573694568.jpg?param=130y130'),
-  createData(5, 'Fcascasc', 'http://p1.music.126.net/mLJ_pKshFVtboLyD-4nBdA==/109951168573694568.jpg?param=130y130'),
-  createData(6, 'axsacac', 'http://p1.music.126.net/mLJ_pKshFVtboLyD-4nBdA==/109951168573694568.jpg?param=130y130'),
-  createData(7, 'cwxassx', 'http://p1.music.126.net/mLJ_pKshFVtboLyD-4nBdA==/109951168573694568.jpg?param=130y130'),
-  createData(8, 'Sfwewsqw', 'http://p1.music.126.net/mLJ_pKshFVtboLyD-4nBdA==/109951168573694568.jpg?param=130y130'),
-  createData(9, 'Aef2d23', 'http://p1.music.126.net/mLJ_pKshFVtboLyD-4nBdA==/109951168573694568.jpg?param=130y130'),
-  createData(10, 'Cfwefwege', 'http://p1.music.126.net/mLJ_pKshFVtboLyD-4nBdA==/109951168573694568.jpg?param=130y130'),
-  createData(11, 'Fdqwdq', 'http://p1.music.126.net/mLJ_pKshFVtboLyD-4nBdA==/109951168573694568.jpg?param=130y130'),
-  createData(12, 'Gwfwe23ds', 'http://p1.music.126.net/mLJ_pKshFVtboLyD-4nBdA==/109951168573694568.jpg?param=130y130'),
+  createData(
+    2036803051,
+    'メフィスト',
+    'http://p1.music.126.net/WNfyUA0wK-5FfdKxFpG6sw==/109951168526842833.jpg?param=130y130',
+    10422201,
+    '女王蜂',
+  ),
+  createData(
+    2034742057,
+    'アイドル',
+    'http://p1.music.126.net/mLJ_pKshFVtboLyD-4nBdA==/109951168573694568.jpg?param=130y130',
+    2132,
+    'YOASOBI	',
+  ),
+  createData(
+    481624926,
+    '夕暮',
+    'http://p2.music.126.net/_FEnDSt4bLuaJZ3ibgC9Gw==/109951162992550196.jpg?param=130y130',
+    1252,
+    'Kevinz / 心华',
+    'https://backblaze.cosine.ren/music/1378048029_%E5%A4%95%E6%9A%AE.mp3',
+  ),
+  createData(
+    2026565329,
+    'Da Capo',
+    'http://p2.music.126.net/awzv1LpuBJiKTeB7roh_Aw==/109951168434956885.jpg?param=130y130',
+    39312,
+    'HOYO-MiX',
+  ),
+  createData(
+    2014336709,
+    '我不曾忘记',
+    'http://p1.music.126.net/dM_2lEqG7ZP7l0NjoApPFg==/109951168232666774.jpg?param=130y130',
+    3002112,
+    '花玲 / 张安琪 / 沐霏',
+  ),
+  createData(
+    1968300695,
+    '如果仅靠谎言将我的世界照亮',
+    'http://p1.music.126.net/mxEjZiDzjVAKfeWuciInTw==/109951167730738022.jpg?param=130y130',
+    3100,
+    'COP',
+    'https://backblaze.cosine.ren/music/1968300695_%E5%A6%82%E6%9E%9C%E4%BB%85%E9%9D%A0%E8%B0%8E%E8%A8%80%E5%B0%86%E6%88%91%E7%9A%84%E4%B8%96%E7%95%8C%E7%85%A7%E4%BA%AE.mp3',
+  ),
+  createData(
+    1983534049,
+    '如果突然想起我',
+    'http://p1.music.126.net/TlmxUEBp68EH4CMe4ROXqQ==/109951167898737755.jpg?param=130y130',
+    20121,
+    '喵☆酱 / 花玲',
+  ),
+  createData(
+    1375725396,
+    'Cyberangel',
+    'http://p1.music.126.net/TAiliOjM10DlKiL56fPIMw==/109951163737497396.jpg?param=130y130',
+    32192,
+    'Hanser',
+  ),
 ];
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -100,6 +151,18 @@ const headCells: readonly HeadCell[] = [
     disablePadding: false,
     label: '封面图片',
   },
+  {
+    id: 'playCount',
+    numeric: true,
+    disablePadding: false,
+    label: '播放量',
+  },
+  {
+    id: 'artist',
+    numeric: true,
+    disablePadding: false,
+    label: '歌手',
+  },
 ];
 
 interface EnhancedTableProps {
@@ -158,6 +221,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 }
 
 export default function MusicManageTable() {
+  const router = useRouter();
   const {
     page,
     rowsPerPage,
@@ -173,7 +237,6 @@ export default function MusicManageTable() {
     handleChangeDense,
   } = useTableProps<MusicItem>({ selectKey: 'id', rows });
   const { order, orderBy, handleRequestSort } = useTableSortProps<MusicItem>({ orderKey: 'id' });
-
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
@@ -189,8 +252,11 @@ export default function MusicManageTable() {
   return (
     <Stack className="w-full" spacing={2}>
       <Stack direction="row" spacing={2}>
-        <Button variant="contained" startIcon={<MdAdd />}>
+        <Button variant="contained" onClick={() => router.push('/dashboard/music/add')} startIcon={<MdAdd />}>
           添加音乐
+        </Button>
+        <Button variant="outlined" startIcon={<MdEdit />}>
+          编辑音乐
         </Button>
         <FormControlLabel control={<Switch checked={dense} onChange={handleChangeDense} />} label="紧密视图" />
       </Stack>
@@ -232,12 +298,16 @@ export default function MusicManageTable() {
                       />
                     </TableCell>
                     <TableCell component="th" id={labelId} scope="row" padding="none">
-                      {row.id}
+                      <div className="flex items-center">
+                        {row.id} <MdPlayCircle onClick={() => toast.info(`${row.id} playing!`)} className="h-9 w-9" />
+                      </div>
                     </TableCell>
                     <TableCell align="right">{row.title}</TableCell>
                     <TableCell align="right">
                       <Image src={row.coverUrl as string} height={80} alt={row.title} />
                     </TableCell>
+                    <TableCell align="right">{row.playCount}</TableCell>
+                    <TableCell align="right">{row.artist}</TableCell>
                   </TableRow>
                 );
               })}

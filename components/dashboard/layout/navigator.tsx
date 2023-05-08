@@ -73,7 +73,7 @@ export default function DashboardNavigator({ className, open }: { className?: st
                   selected={selectIdx === idx}
                   className="w-full px-1 py-1"
                   onClick={() => {
-                    router.push(`/dashboard/${path}`);
+                    router.push(`/dashboard${path}`);
                     setSelectIdx(idx);
                   }}
                   name={name}

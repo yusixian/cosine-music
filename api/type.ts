@@ -81,9 +81,11 @@ export enum MusicStatus {
 export type MusicDetail = {
   id: number; // 音乐id
   title: string; // 音乐标题
+  description?: string; // 音乐描述
   coverUrl?: string; // 封面图片路径
   url: string; // 歌曲资源路径
   playCount: number; // 播放量
+  artist?: string; // 歌手名称
   foreignArtist?: string; // 不在本平台的歌手名称
   artistId?: number; // 歌手id
   lyric?: string; // lrc格式歌词

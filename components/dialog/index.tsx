@@ -12,6 +12,7 @@ import React, { cloneElement, useMemo, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { CgClose } from 'react-icons/cg';
 import { AnimatePresence, motion } from 'framer-motion';
+import { Typography } from '@mui/material';
 
 type DialogProps = {
   rootId?: string;
@@ -24,6 +25,7 @@ type DialogProps = {
   overlayClass?: string;
   showCloseButton?: boolean;
   enableAnim?: boolean;
+  title?: string;
 };
 
 export default function Dialog({
@@ -37,6 +39,7 @@ export default function Dialog({
   overlayClass,
   showCloseButton,
   enableAnim = true,
+  title,
 }: DialogProps) {
   const [uncontrolledOpen, setUncontrolledOpen] = useState(initialOpen);
   const open = controlledOpen ?? uncontrolledOpen;
@@ -75,11 +78,15 @@ export default function Dialog({
               <FloatingFocusManager context={context}>
                 <motion.div
                   {...itemVariants}
-                  className={twMerge('relative min-w-[12.5rem] rounded bg-white p-4 shadow-md  dark:bg-[#383838]', className)}
+                  className={twMerge(
+                    'relative min-w-[12.5rem] max-w-[37.5rem] rounded bg-white p-4 shadow-md dark:bg-[#383838] md:mx-12 md:min-w-[5rem]',
+                    className,
+                  )}
                   ref={floating}
                   {...getFloatingProps()}
                 >
                   {showCloseButton && <CgClose className="absolute right-4 top-4 cursor-pointer text-xl" onClick={onClose} />}
+                  {title && <Typography variant="h5">{title}</Typography>}
                   {render({ close: onClose })}
                 </motion.div>
               </FloatingFocusManager>

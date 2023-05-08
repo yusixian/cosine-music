@@ -27,14 +27,20 @@ type NavItemProps = {
 function NavItem({ selected, icon, name, onClick, className, indicatorClass, type }: NavItemProps) {
   const userInfo = useRecoilValue(userInfoAtom);
 
-  if (type === UserType.ADMIN && userInfo?.type === UserType.ADMIN)
+  if (type === UserType.ADMIN) {
     return (
-      <motion.div variants={itemVariants}>
-        <Button onClick={onClick} variant="contained" size="large" endIcon={<MdSend />}>
-          {name}
-        </Button>
-      </motion.div>
+      <>
+        {userInfo?.type === UserType.ADMIN ? (
+          <motion.div variants={itemVariants}>
+            <Button onClick={onClick} variant="contained" size="large" endIcon={<MdSend />}>
+              {name}
+            </Button>
+          </motion.div>
+        ) : null}
+      </>
     );
+  }
+
   return (
     <motion.div
       variants={itemVariants}

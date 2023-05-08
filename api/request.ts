@@ -1,5 +1,5 @@
 import { STORAGE_KEY } from '@/constants';
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import { AxiosRequestHeaders } from 'axios';
 import localforage from 'localforage';
 
@@ -29,5 +29,14 @@ instance.interceptors.response.use(
   (response) => response.data,
   (error) => Promise.reject(error),
 );
+
+/**
+ * post formData 请求 上传图片不需要token
+ * @param {string} url - 请求短url
+ * @param {FormData} data 请求数据
+ * @returns {Promise<T>} 返回 T 类型数据
+ */
+export const postFormData = <T>(url: string, data: FormData, config?: AxiosRequestConfig<FormData>): Promise<T> =>
+  instance.postForm(url, data, config);
 
 export default instance;
