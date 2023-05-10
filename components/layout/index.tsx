@@ -1,16 +1,18 @@
+import { useIsMounted } from '@/hooks/useIsMounted';
+import { useFetchUserInfoByAuth } from '@/hooks/user';
+import { PaletteMode, StyledEngineProvider } from '@mui/material';
+import { ThemeProvider as MaterialThemeProvider, createTheme } from '@mui/material/styles';
 import clsx from 'clsx';
+import { useTheme } from 'next-themes';
 import { ReactNode, useMemo } from 'react';
 import { ToastContainer } from 'react-toastify';
 import { poppins } from '../../constants/font';
 import { Footer } from './footer';
 import { Header } from './header';
-import { useFetchUserInfoByAuth } from '@/hooks/user';
-import { PaletteMode, StyledEngineProvider } from '@mui/material';
-import { ThemeProvider as MaterialThemeProvider, createTheme } from '@mui/material/styles';
-import { useTheme } from 'next-themes';
 
 export default function Layout({ children }: { children?: ReactNode }) {
   const { theme } = useTheme();
+  const isMounted = useIsMounted();
   const themeOptions = useMemo(
     () =>
       createTheme({
@@ -26,7 +28,9 @@ export default function Layout({ children }: { children?: ReactNode }) {
       }),
     [theme],
   );
+
   useFetchUserInfoByAuth();
+  if (!isMounted) return null;
   return (
     <StyledEngineProvider injectFirst>
       <MaterialThemeProvider theme={themeOptions}>
@@ -38,6 +42,7 @@ export default function Layout({ children }: { children?: ReactNode }) {
         >
           <ToastContainer className="z-30" position="top-center" autoClose={3000} closeButton={false} />
           <Header />
+          <div id="player" className="bg-red-400"></div>
           <main className="relative w-full flex-grow overflow-auto">{children}</main>
           <Footer className="justify-end" />
         </div>

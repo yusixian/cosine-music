@@ -9,6 +9,7 @@ import { RecoilRoot } from 'recoil';
 
 import 'react-toastify/dist/ReactToastify.css';
 import '../styles/globals.css';
+import 'aplayer/dist/APlayer.min.css';
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;

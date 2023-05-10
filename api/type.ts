@@ -72,6 +72,34 @@ export interface User {
   updatedAt?: string;
 }
 
+export type LoginParam = {
+  user_name: string;
+  password: string;
+};
+export type LoginResult = {
+  sessionid: number;
+  token: string;
+  user: User;
+};
+
+export type RegisterParam = {
+  user_name: string;
+  password: string;
+};
+
+export type MusicCreateParam = {
+  id?: number;
+  title: string; // 音乐标题
+  description?: string; // 音乐描述
+  coverUrl?: string; // 封面图片路径
+  url: string; // 歌曲资源路径
+  foreignArtist?: string; // 不在本平台的歌手名称
+  artistId?: number;
+  lyric?: string; // lrc格式歌词
+  lyricAuthorId?: number;
+  tags?: number[];
+};
+
 export enum MusicStatus {
   UNAUDITED = 0,
   NORMAL,
@@ -94,19 +122,4 @@ export type MusicDetail = {
   createdAt: string;
   updatedAt?: string;
   deletedAt?: string;
-};
-
-export type LoginParam = {
-  user_name: string;
-  password: string;
-};
-export type LoginResult = {
-  sessionid: number;
-  token: string;
-  user: User;
-};
-
-export type RegisterParam = {
-  user_name: string;
-  password: string;
 };

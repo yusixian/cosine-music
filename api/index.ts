@@ -1,22 +1,24 @@
 import { toast } from 'react-toastify';
 import request, { postFormData } from './request';
-import { LoginParam, LoginResult, RegisterParam, Response, User } from './type';
+import { LoginParam, LoginResult, MusicCreateParam, MusicDetail, RegisterParam, Response, User } from './type';
 
 export const login = (data: LoginParam) => request.post<any, Response<LoginResult>>('/user/login', data);
 export const register = (data: RegisterParam) => request.post<any, Response<User>>('/user/register', data);
 
 export const fetchUserInfoByAuth = () => request.get<any, Response<User>>('/user/info/byauth');
 
+// musics
+
 /**
- * 图片上传
+ * 资源上传
  * @param file
  * @returns {Promise<string>} 图片url
  */
-export const uploadImage = async (file: any, url?: string) => {
+export const uploadFile = async (file: any, url?: string) => {
   const formData = new FormData();
   formData.append('file', file);
   try {
-    const res = await postFormData<Response<string>>(url ?? '/music/upload/cover', formData);
+    const res = await postFormData<Response<string>>(url ?? '/music/upload/file', formData);
     if (res.result) toast.success('Upload success');
     return res.result;
   } catch (e) {
@@ -24,3 +26,5 @@ export const uploadImage = async (file: any, url?: string) => {
     return '';
   }
 };
+
+export const createMusic = (data: MusicCreateParam) => request.post<any, Response<MusicDetail>>('/music/create', data);

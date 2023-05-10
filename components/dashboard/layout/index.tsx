@@ -14,6 +14,7 @@ import { useRecoilValue } from 'recoil';
 import DashboardNavigator from './navigator';
 import Search from '@/components/search';
 import { useRouter } from 'next/router';
+import { useDashboardGlobalPlayer } from '@/hooks/music';
 
 export default function DashboardLayout({ children }: { children?: ReactNode }) {
   const { theme } = useTheme();
@@ -36,18 +37,18 @@ export default function DashboardLayout({ children }: { children?: ReactNode }) 
   useFetchUserInfoByAuth();
   const userInfo = useRecoilValue(userInfoAtom);
   const router = useRouter();
-
+  const dashboardPlayer = useDashboardGlobalPlayer();
   return (
     <StyledEngineProvider injectFirst>
       <MaterialThemeProvider theme={themeOptions}>
         <div
           className={clsx(
-            'flex h-screen min-h-screen flex-col overflow-hidden bg-cos-gradient-main text-black dark:bg-cos-gradient-main-dark dark:text-white',
+            'flex h-screen flex-col overflow-hidden bg-cos-gradient-main text-black dark:bg-cos-gradient-main-dark dark:text-white',
             poppins.variable,
           )}
         >
           <ToastContainer className="z-30" position="top-center" autoClose={3000} closeButton={false} />
-          <AppBar position="static">
+          <AppBar position="relative">
             <Toolbar>
               <IconButton
                 onClick={() => setMenuOpen(!menuOpen)}
@@ -72,7 +73,7 @@ export default function DashboardLayout({ children }: { children?: ReactNode }) 
               <Search />
             </Toolbar>
           </AppBar>
-          <div className="flex h-full overflow-auto">
+          <div className="flex flex-grow overflow-auto">
             <DashboardNavigator open={menuOpen} className="h-full" />
             {userInfo && userInfo?.type === UserType.ADMIN && (
               <Box component="main" className="h-full overflow-auto" sx={{ flexGrow: 1, bgcolor: 'background.default' }}>
@@ -80,6 +81,7 @@ export default function DashboardLayout({ children }: { children?: ReactNode }) 
               </Box>
             )}
           </div>
+          <div className="relative">{dashboardPlayer}</div>
         </div>
       </MaterialThemeProvider>
     </StyledEngineProvider>
