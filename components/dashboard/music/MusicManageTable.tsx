@@ -1,7 +1,9 @@
+import { fetchMusicList } from '@/api';
+import { MusicDetail, OrderType } from '@/api/type';
 import EnhancedTableToolbar from '@/components/table/EnhancedTableToolbar';
-import { MusicItem } from '@/hooks/dashboard/music';
+import { useFetchMusicList } from '@/hooks/dashboard/music';
 import { useTableProps, useTableSortProps } from '@/hooks/table';
-import { Button, Stack, Table, TableBody, TableCell, TableContainer } from '@mui/material';
+import { Button, CircularProgress, Stack, Table, TableBody, TableCell, TableContainer } from '@mui/material';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -14,120 +16,13 @@ import TableSortLabel from '@mui/material/TableSortLabel';
 import { visuallyHidden } from '@mui/utils';
 import { Image } from 'antd';
 import { useRouter } from 'next/router';
-import { useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { MdAdd, MdEdit, MdPlayCircle } from 'react-icons/md';
 import { toast } from 'react-toastify';
 
-function createData(id: number, title: string, coverUrl: string, playCount: number, artist?: string, url?: string): MusicItem {
-  return {
-    id,
-    title,
-    coverUrl,
-    playCount,
-    artist,
-    url,
-  };
-}
-
-const rows = [
-  createData(
-    2036803051,
-    'メフィスト',
-    'http://p1.music.126.net/WNfyUA0wK-5FfdKxFpG6sw==/109951168526842833.jpg?param=130y130',
-    10422201,
-    '女王蜂',
-  ),
-  createData(
-    2034742057,
-    'アイドル',
-    'http://p1.music.126.net/mLJ_pKshFVtboLyD-4nBdA==/109951168573694568.jpg?param=130y130',
-    2132,
-    'YOASOBI	',
-  ),
-  createData(
-    481624926,
-    '夕暮',
-    'http://p2.music.126.net/_FEnDSt4bLuaJZ3ibgC9Gw==/109951162992550196.jpg?param=130y130',
-    1252,
-    'Kevinz / 心华',
-    'https://backblaze.cosine.ren/music/1378048029_%E5%A4%95%E6%9A%AE.mp3',
-  ),
-  createData(
-    2026565329,
-    'Da Capo',
-    'http://p2.music.126.net/awzv1LpuBJiKTeB7roh_Aw==/109951168434956885.jpg?param=130y130',
-    39312,
-    'HOYO-MiX',
-  ),
-  createData(
-    2014336709,
-    '我不曾忘记',
-    'http://p1.music.126.net/dM_2lEqG7ZP7l0NjoApPFg==/109951168232666774.jpg?param=130y130',
-    3002112,
-    '花玲 / 张安琪 / 沐霏',
-  ),
-  createData(
-    1968300695,
-    '如果仅靠谎言将我的世界照亮',
-    'http://p1.music.126.net/mxEjZiDzjVAKfeWuciInTw==/109951167730738022.jpg?param=130y130',
-    3100,
-    'COP',
-    'https://backblaze.cosine.ren/music/1968300695_%E5%A6%82%E6%9E%9C%E4%BB%85%E9%9D%A0%E8%B0%8E%E8%A8%80%E5%B0%86%E6%88%91%E7%9A%84%E4%B8%96%E7%95%8C%E7%85%A7%E4%BA%AE.mp3',
-  ),
-  createData(
-    1983534049,
-    '如果突然想起我',
-    'http://p1.music.126.net/TlmxUEBp68EH4CMe4ROXqQ==/109951167898737755.jpg?param=130y130',
-    20121,
-    '喵☆酱 / 花玲',
-  ),
-  createData(
-    1375725396,
-    'Cyberangel',
-    'http://p1.music.126.net/TAiliOjM10DlKiL56fPIMw==/109951163737497396.jpg?param=130y130',
-    32192,
-    'Hanser',
-  ),
-];
-
-function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-type Order = 'asc' | 'desc';
-
-function getComparator<Key extends keyof any>(
-  order: Order,
-  orderBy: Key,
-): (a: { [key in Key]: number | string }, b: { [key in Key]: number | string }) => number {
-  return order === 'desc' ? (a, b) => descendingComparator(a, b, orderBy) : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-// Since 2020 all major browsers ensure sort stability with Array.prototype.sort().
-// stableSort() brings sort stability to non-modern browsers (notably IE11). If you
-// only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
-// with exampleArray.slice().sort(exampleComparator)
-function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) {
-  const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) {
-      return order;
-    }
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
-
 interface HeadCell {
   disablePadding: boolean;
-  id: keyof MusicItem;
+  id: keyof MusicDetail;
   label: string;
   numeric: boolean;
 }
@@ -167,16 +62,16 @@ const headCells: readonly HeadCell[] = [
 
 interface EnhancedTableProps {
   numSelected: number;
-  onRequestSort: (event: React.MouseEvent<unknown>, property: keyof MusicItem) => void;
+  onRequestSort: (event: React.MouseEvent<unknown>, property: keyof MusicDetail) => void;
   onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  order: Order;
+  order: OrderType;
   orderBy: string;
   rowCount: number;
 }
 
 function EnhancedTableHead(props: EnhancedTableProps) {
   const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
-  const createSortHandler = (property: keyof MusicItem) => (event: React.MouseEvent<unknown>) => {
+  const createSortHandler = (property: keyof MusicDetail) => (event: React.MouseEvent<unknown>) => {
     onRequestSort(event, property);
   };
 
@@ -222,9 +117,13 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 
 export default function MusicManageTable() {
   const router = useRouter();
+  const [rows, setRows] = useState<MusicDetail[]>([]);
+
   const {
     page,
     rowsPerPage,
+    total,
+    setTotal,
     handleChangePage,
     handleChangeRowsPerPage,
 
@@ -235,19 +134,18 @@ export default function MusicManageTable() {
 
     dense,
     handleChangeDense,
-  } = useTableProps<MusicItem>({ selectKey: 'id', rows });
-  const { order, orderBy, handleRequestSort } = useTableSortProps<MusicItem>({ orderKey: 'id' });
-  // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+  } = useTableProps<MusicDetail>({ selectKey: 'id', rows });
 
-  const visibleRows: MusicItem[] = useMemo(
-    () =>
-      stableSort(rows as any, getComparator(order, orderBy)).slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage,
-      ) as MusicItem[],
-    [order, orderBy, page, rowsPerPage],
-  );
+  const { order, orderBy, handleRequestSort } = useTableSortProps<MusicDetail>({ orderKey: 'id' });
+
+  const { data, isLoading } = useFetchMusicList({ pageNum: page + 1, pageSize: rowsPerPage, order, orderBy });
+  console.log({ order, orderBy, rows });
+  useEffect(() => {
+    if (isLoading) return;
+    const { list = [], total = 0 } = data ?? {};
+    setRows(list);
+    setTotal(total);
+  }, [data, isLoading, setRows, setTotal]);
 
   return (
     <Stack className="w-full" spacing={2}>
@@ -257,6 +155,20 @@ export default function MusicManageTable() {
         </Button>
         <Button variant="outlined" startIcon={<MdEdit />}>
           编辑音乐
+        </Button>
+        <Button
+          variant="contained"
+          onClick={() => {
+            fetchMusicList({})
+              .then((data) => {
+                toast.success('Yes');
+                console.log(data);
+              })
+              .catch((e) => toast.error(e));
+          }}
+          startIcon={<MdAdd />}
+        >
+          Test
         </Button>
         <FormControlLabel control={<Switch checked={dense} onChange={handleChangeDense} />} label="紧密视图" />
       </Stack>
@@ -273,8 +185,13 @@ export default function MusicManageTable() {
               rowCount={rows.length}
             />
             <TableBody>
-              {visibleRows.map((row, index) => {
-                const isItemSelected = isSelected((row as MusicItem).id);
+              {isLoading && (
+                <div className="flex w-full items-center justify-center py-8">
+                  <CircularProgress />
+                </div>
+              )}
+              {rows.map((row, index) => {
+                const isItemSelected = isSelected((row as MusicDetail).id);
                 const labelId = `enhanced-table-checkbox-${index}`;
 
                 return (
@@ -311,22 +228,13 @@ export default function MusicManageTable() {
                   </TableRow>
                 );
               })}
-              {emptyRows > 0 && (
-                <TableRow
-                  style={{
-                    height: (dense ? 33 : 53) * emptyRows,
-                  }}
-                >
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
             </TableBody>
           </Table>
         </TableContainer>
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={total}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

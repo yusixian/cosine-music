@@ -19,6 +19,19 @@ export type Response<T> = {
   result: T | null;
 };
 
+export type PaginatedData<T> = {
+  list: Array<T>; // 当前记录
+  total: number; // 记录总数
+  totalPages: number; // 总页数
+  pageNum: number; // 当前页码
+  pageSize: number; // 每页记录数
+};
+
+export type PaginateProps = { pageNum?: number; pageSize?: number };
+
+export type OrderType = 'asc' | 'desc';
+export type SortProps = { order?: OrderType; orderBy?: string };
+
 export enum UserType {
   NORMAL = 0,
   ADMIN,
@@ -122,4 +135,16 @@ export type MusicDetail = {
   createdAt: string;
   updatedAt?: string;
   deletedAt?: string;
+};
+
+export type MusicUpdateParam = {
+  title?: string;
+  description?: string;
+  coverUrl?: string;
+  url?: string;
+  foreignArtist?: string;
+  artistId?: number;
+  lyric?: string;
+  lyricAuthorId?: number;
+  status?: MusicStatus; // 0:未审核 1:正常 2:封禁
 };

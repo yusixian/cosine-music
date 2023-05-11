@@ -3,6 +3,7 @@ import { useState } from 'react';
 export function useTableProps<T>({ rows, selectKey }: { rows: T[]; selectKey: keyof T }) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [total, setTotal] = useState(rows.length);
 
   // 分页
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -61,6 +62,8 @@ export function useTableProps<T>({ rows, selectKey }: { rows: T[]; selectKey: ke
 
     dense,
     handleChangeDense,
+    total,
+    setTotal,
   };
 }
 

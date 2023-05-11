@@ -18,6 +18,7 @@ export const useUploadFile = (onSuccess: (url: string | null) => void) => {
     [onSuccess],
   );
 };
+
 export const useGlobalPlayer = () => {
   const isMounted = useIsMounted();
   const setGlobalMusicController = useSetRecoilState(globalMusicControllerAtom);

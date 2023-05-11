@@ -1,35 +1,21 @@
-export type MusicItem = {
-  id: number;
-  title: string;
-  coverUrl?: string; // 封面图片路径
-  playCount: number; // 播放量
-  artist?: string; // 歌手名称
-  url?: string;
-  // artistId?: number; // 歌手id
-  // lyricAuthorId?: number; // 歌词贡献者id
-  // status: MusicStatus; // 0:未审核 1:正常 2:封禁
-  // createdAt: string;
-  // updatedAt?: string;
-  // deletedAt?: string;
+import { fetchMusicList } from '@/api';
+import { Code, PaginateProps, SortProps } from '@/api/type';
+import { useQuery } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
+
+export const useFetchMusicList = ({ pageNum, pageSize, order, orderBy }: PaginateProps & SortProps) => {
+  return useQuery(
+    ['get_music_list', pageNum, pageSize, order, orderBy],
+    () => fetchMusicList({ pageNum, pageSize, order, orderBy }),
+    {
+      select: (res) => {
+        console.log('fetch music', res);
+        if (res.code === Code.success) {
+          return res.result;
+        }
+        toast.error(res?.message || '获取音乐列表失败！');
+        return null;
+      },
+    },
+  );
 };
-// export function useMusicShortenColumn() {
-//   const columns = useMemo<ColumnDef<MusicItem>[]>(
-//     () => [
-//       {
-//         accessorKey: 'id',
-//         header: () => <p className="text-left">音乐ID</p>,
-//       },
-//       {
-//         accessorKey: 'title',
-//         header: '音乐标题',
-//       },
-//       {
-//         accessorKey: 'coverUrl',
-//         header: '音乐封面',
-//         cell: ({ getValue, row }) => <Image src={getValue<string>()} alt={row.original.title} className="h-9 w-9" />,
-//       },
-//     ],
-//     [],
-//   );
-//   return columns;
-// }
