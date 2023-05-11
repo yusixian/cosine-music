@@ -10,6 +10,7 @@ import { RecoilRoot } from 'recoil';
 import 'react-toastify/dist/ReactToastify.css';
 import '../styles/globals.css';
 import 'aplayer/dist/APlayer.min.css';
+import { StyledEngineProvider } from '@mui/material/styles';
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -30,11 +31,13 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <ThemeProvider attribute="class">
-        <QueryClientProvider client={queryClient}>
-          <RecoilRoot>{getLayout(<Component {...pageProps} />)}</RecoilRoot>
-        </QueryClientProvider>
-      </ThemeProvider>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider attribute="class">
+          <QueryClientProvider client={queryClient}>
+            <RecoilRoot>{getLayout(<Component {...pageProps} />)}</RecoilRoot>
+          </QueryClientProvider>
+        </ThemeProvider>
+      </StyledEngineProvider>
     </>
   );
 }
