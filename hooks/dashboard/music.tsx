@@ -1,6 +1,6 @@
-import { fetchMusicList } from '@/api';
-import { Code, PaginateProps, SortProps } from '@/api/type';
-import { useQuery } from '@tanstack/react-query';
+import { fetchMusicList, updateAuditMusic, updateMusic } from '@/api';
+import { Code, MusicDetail, MusicUpdateParam, PaginateProps, SortProps, Response, MusicAuditParam } from '@/api/type';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
 export const useFetchMusicList = ({ pageNum, pageSize, order, orderBy }: PaginateProps & SortProps) => {
@@ -18,4 +18,30 @@ export const useFetchMusicList = ({ pageNum, pageSize, order, orderBy }: Paginat
       },
     },
   );
+};
+
+export const useMutationUpdateMusic = () => {
+  return useMutation<Response<MusicDetail>, any, { id: number; data: MusicUpdateParam }>({
+    mutationFn: (param) => updateMusic(param),
+    onSuccess: ({ result, code, message }) => {
+      if (code === Code.success) {
+        toast.success(message ?? '更新音乐成功！');
+        console.log({ code, result, message });
+      }
+    },
+  });
+};
+
+export const useMutationAuditMusic = ({ onSuccess }: { onSuccess: () => void }) => {
+  return useMutation<Response<undefined>, any, MusicAuditParam>({
+    mutationFn: (data) => updateAuditMusic(data),
+    onSuccess: ({ code, message }) => {
+      if (code === Code.success) {
+        toast.success(message ?? '更新音乐审核状态成功！');
+        onSuccess?.();
+        return;
+      }
+      toast.error(message ?? '更新音乐审核状态失败！');
+    },
+  });
 };

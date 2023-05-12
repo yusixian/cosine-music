@@ -1,9 +1,22 @@
+import { updateMusicPlayCount } from '@/api';
 import { MusicDetail, MusicStatus, OrderType } from '@/api/type';
 import EnhancedTableToolbar from '@/components/table/EnhancedTableToolbar';
-import { useFetchMusicList } from '@/hooks/dashboard/music';
+import { useFetchMusicList, useMutationAuditMusic } from '@/hooks/dashboard/music';
 import { useTableProps, useTableSortProps } from '@/hooks/table';
 import { globalMusicControllerAtom } from '@/store/music/state';
-import { Button, Chip, CircularProgress, IconButton, Stack, Table, TableBody, TableCell, TableContainer } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
+import {
+  Button,
+  ButtonGroup,
+  Chip,
+  CircularProgress,
+  IconButton,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+} from '@mui/material';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -16,8 +29,8 @@ import TableSortLabel from '@mui/material/TableSortLabel';
 import { visuallyHidden } from '@mui/utils';
 import { Image } from 'antd';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import { MdAdd, MdEdit, MdPlayCircle } from 'react-icons/md';
+import { useEffect, useState, useCallback } from 'react';
+import { MdAdd, MdDoneAll, MdEdit, MdPlayCircle, MdUnpublished, MdWarning } from 'react-icons/md';
 import { toast } from 'react-toastify';
 import { useRecoilValue } from 'recoil';
 
@@ -160,7 +173,20 @@ export default function MusicManageTable() {
 
   const { order, orderBy, handleRequestSort } = useTableSortProps<MusicDetail>({ orderKey: 'id' });
   const globalController = useRecoilValue(globalMusicControllerAtom);
-  const { data, isLoading } = useFetchMusicList({ pageNum: page + 1, pageSize: rowsPerPage, order, orderBy });
+  const { data, isLoading, refetch } = useFetchMusicList({ pageNum: page + 1, pageSize: rowsPerPage, order, orderBy });
+  const mutationMusicAudit = useMutationAuditMusic({ onSuccess: () => refetch() });
+
+  const batchAuditMusic = useCallback(
+    (status: MusicStatus) => {
+      console.log({ selected, status });
+      if (selected.length === 0) {
+        toast.error('请至少选择一首歌曲');
+        return;
+      }
+      mutationMusicAudit.mutate({ musicIds: selected as number[], status });
+    },
+    [mutationMusicAudit, selected],
+  );
 
   useEffect(() => {
     if (isLoading) return;
@@ -171,13 +197,43 @@ export default function MusicManageTable() {
 
   return (
     <Stack className="w-full" spacing={2}>
-      <Stack direction="row" spacing={2}>
+      <div className="flex flex-wrap items-center gap-4">
         <Button variant="contained" onClick={() => router.push('/dashboard/music/add')} startIcon={<MdAdd />}>
           添加音乐
         </Button>
         <Button variant="outlined" startIcon={<MdEdit />}>
           编辑音乐
         </Button>
+        <ButtonGroup variant="contained" aria-label="outlined primary button group">
+          <LoadingButton
+            variant="contained"
+            loading={mutationMusicAudit.isLoading}
+            color="warning"
+            onClick={() => batchAuditMusic(MusicStatus.UNAUDITED)}
+            startIcon={<MdWarning />}
+          >
+            待审
+          </LoadingButton>
+          <LoadingButton
+            color="success"
+            variant="contained"
+            loading={mutationMusicAudit.isLoading}
+            onClick={() => batchAuditMusic(MusicStatus.NORMAL)}
+            startIcon={<MdDoneAll />}
+          >
+            过审
+          </LoadingButton>
+          <LoadingButton
+            color="error"
+            variant="contained"
+            loading={mutationMusicAudit.isLoading}
+            onClick={() => batchAuditMusic(MusicStatus.BANNED)}
+            startIcon={<MdUnpublished />}
+          >
+            封禁
+          </LoadingButton>
+        </ButtonGroup>
+
         <Button
           variant="contained"
           onClick={() => {
@@ -188,7 +244,7 @@ export default function MusicManageTable() {
           Test
         </Button>
         <FormControlLabel control={<Switch checked={dense} onChange={handleChangeDense} />} label="紧密视图" />
-      </Stack>
+      </div>
       <Paper sx={{ width: '100%', mb: 2 }}>
         <EnhancedTableToolbar numSelected={selected.length} title="所有音乐" />
         <TableContainer>
@@ -245,6 +301,7 @@ export default function MusicManageTable() {
                               lrc: row.lyric,
                               url: row.url,
                             });
+                            updateMusicPlayCount(row.id);
                             toast.info(`${row.id} 已加入播放列表!`);
                           }}
                         >

@@ -148,3 +148,8 @@ export type MusicUpdateParam = {
   lyricAuthorId?: number;
   status?: MusicStatus; // 0:未审核 1:正常 2:封禁
 };
+
+export type MusicAuditParam = {
+  musicIds: number[];
+  status: MusicStatus;
+};

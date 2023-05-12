@@ -3,6 +3,7 @@ import request, { postFormData } from './request';
 import {
   LoginParam,
   LoginResult,
+  MusicAuditParam,
   MusicCreateParam,
   MusicDetail,
   MusicUpdateParam,
@@ -49,8 +50,14 @@ export const fetchMusicList = ({ pageNum, pageSize, order, orderBy }: PaginatePr
 export const fetchMusicDetail = (id: number) => request.get<any, Response<MusicDetail>>(`/music/detail/${id}`);
 
 // 更新音乐
-export const updateMusic = (id: number, data: MusicUpdateParam) =>
+export const updateMusic = ({ id, data }: { id: number; data: MusicUpdateParam }) =>
   request.put<any, Response<MusicDetail>>(`/music/update/${id}`, data);
+
+// 更新音乐 - 批量审核
+export const updateAuditMusic = (data: MusicAuditParam) => request.put<any, Response<undefined>>(`/music/audit`, data);
+
+// 更新音乐 - 播放量增长
+export const updateMusicPlayCount = (id: number) => request.put<any, Response<undefined>>(`/music/play/${id}`);
 
 // 删除音乐
 export const deleteMusic = (id: number) => request.delete<any, Response<boolean>>(`/music/delete/${id}`);
