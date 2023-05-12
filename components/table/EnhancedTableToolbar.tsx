@@ -31,13 +31,13 @@ export default function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
       )}
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton>
+          <IconButton color="error">
             <MdDelete />
           </IconButton>
         </Tooltip>
       ) : (
         <Tooltip title="Filter list">
-          <IconButton>
+          <IconButton color="primary">
             <MdFilterList />
           </IconButton>
         </Tooltip>

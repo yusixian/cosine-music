@@ -233,16 +233,6 @@ export default function MusicManageTable() {
             封禁
           </LoadingButton>
         </ButtonGroup>
-
-        <Button
-          variant="contained"
-          onClick={() => {
-            console.log({ selected });
-          }}
-          startIcon={<MdAdd />}
-        >
-          Test
-        </Button>
         <FormControlLabel control={<Switch checked={dense} onChange={handleChangeDense} />} label="紧密视图" />
       </div>
       <Paper sx={{ width: '100%', mb: 2 }}>
