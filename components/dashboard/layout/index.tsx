@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { ReactNode, useMemo, useState } from 'react';
+import { ReactNode, useMemo, useRef, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import { UserType } from '@/api/type';
 import Search from '@/components/search';
@@ -43,10 +43,12 @@ export default function DashboardLayout({ children }: { children?: ReactNode }) 
   const router = useRouter();
   const dashboardPlayer = useDashboardGlobalPlayer();
   const { playerShow } = useRecoilValue(globalConfigAtom);
+  const containerRef = useRef(null);
   const isMounted = useIsMounted();
   return (
     <MaterialThemeProvider theme={themeOptions}>
       <div
+        ref={containerRef}
         className={clsx(
           'flex h-screen flex-col overflow-hidden bg-cos-gradient-main text-black dark:bg-cos-gradient-main-dark dark:text-white',
           poppins.variable,
@@ -88,15 +90,10 @@ export default function DashboardLayout({ children }: { children?: ReactNode }) 
             <NotFound message="没有权限！请返回主页登录" onClick={() => router.push('/my')} />
           )}
         </div>
-        <motion.div drag className="relative">
+        <motion.div drag dragConstraints={containerRef} className="relative">
           {isMounted && <FloatingActions />}
         </motion.div>
-        <div
-          className={clsx(playerShow ? 'relative' : 'absolute bottom-full')}
-          // animate={playerShow ? {} : { translateY: 100 }}
-        >
-          {dashboardPlayer}
-        </div>
+        <div className={clsx(playerShow ? 'relative' : 'absolute bottom-full')}>{dashboardPlayer}</div>
       </div>
     </MaterialThemeProvider>
   );
