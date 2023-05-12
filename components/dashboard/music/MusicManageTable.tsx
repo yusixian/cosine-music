@@ -301,7 +301,7 @@ export default function MusicManageTable() {
                               lrc: row.lyric,
                               url: row.url,
                             });
-                            updateMusicPlayCount(row.id);
+                            updateMusicPlayCount(row.id).catch((e) => console.error(e));
                             toast.info(`${row.id} 已加入播放列表!`);
                           }}
                         >
