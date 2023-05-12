@@ -1,6 +1,7 @@
 import { globalConfigAtom, globalMusicControllerAtom } from '@/store/music/state';
 import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@mui/material';
 import { useMemo } from 'react';
+import { CgTrashEmpty } from 'react-icons/cg';
 import { MdMusicNote, MdOutlinePauseCircleFilled, MdOutlinePlayCircleFilled } from 'react-icons/md';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
@@ -10,6 +11,13 @@ export default function FloatingActions() {
   const globalController = useRecoilValue(globalMusicControllerAtom);
   const actions = useMemo(
     () => [
+      {
+        icon: <CgTrashEmpty className={iconClass} />,
+        name: 'Music Clear',
+        event: () => {
+          globalController.list.clear();
+        },
+      },
       {
         icon: globalConfig.playerPause ? (
           <MdOutlinePlayCircleFilled className={iconClass} />
