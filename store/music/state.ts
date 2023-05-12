@@ -11,3 +11,15 @@ export const dashboardGlobalMusicControllerAtom = atom<any>({
   dangerouslyAllowMutability: true,
   default: null,
 });
+
+export const globalConfigAtom = atom<{
+  playerShow: boolean;
+  playerPause: boolean;
+}>({
+  key: 'global_config_atom',
+  dangerouslyAllowMutability: true,
+  default: {
+    playerShow: true,
+    playerPause: true,
+  },
+});

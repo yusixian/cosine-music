@@ -1,11 +1,11 @@
 import clsx from 'clsx';
 import { ReactNode, useMemo, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
-
 import { UserType } from '@/api/type';
 import Search from '@/components/search';
 import { poppins } from '@/constants/font';
 import { useDashboardGlobalPlayer } from '@/hooks/music';
+import { useIsMounted } from '@/hooks/useIsMounted';
 import { useFetchUserInfoByAuth } from '@/hooks/user';
 import { userInfoAtom } from '@/store/user/state';
 import { AppBar, Box, IconButton, PaletteMode, Toolbar, Typography } from '@mui/material';
@@ -14,7 +14,11 @@ import { useTheme } from 'next-themes';
 import { useRouter } from 'next/router';
 import { MdArrowBackIosNew, MdMenu } from 'react-icons/md';
 import { useRecoilValue } from 'recoil';
+import NotFound from '../notfound/NotFound';
+import FloatingActions from './FloatingActions';
 import DashboardNavigator from './navigator';
+import { motion } from 'framer-motion';
+import { globalConfigAtom } from '@/store/music/state';
 
 export default function DashboardLayout({ children }: { children?: ReactNode }) {
   const { theme } = useTheme();
@@ -38,6 +42,8 @@ export default function DashboardLayout({ children }: { children?: ReactNode }) 
   const userInfo = useRecoilValue(userInfoAtom);
   const router = useRouter();
   const dashboardPlayer = useDashboardGlobalPlayer();
+  const { playerShow } = useRecoilValue(globalConfigAtom);
+  const isMounted = useIsMounted();
   return (
     <MaterialThemeProvider theme={themeOptions}>
       <div
@@ -74,13 +80,23 @@ export default function DashboardLayout({ children }: { children?: ReactNode }) 
         </AppBar>
         <div className="flex flex-grow overflow-auto">
           <DashboardNavigator open={menuOpen} className="h-full" />
-          {userInfo && userInfo?.type === UserType.ADMIN && (
+          {userInfo && userInfo?.type === UserType.ADMIN ? (
             <Box component="main" className="h-full overflow-auto" sx={{ flexGrow: 1, bgcolor: 'background.default' }}>
               {children}
             </Box>
+          ) : (
+            <NotFound message="没有权限！请返回主页登录" onClick={() => router.push('/my')} />
           )}
         </div>
-        <div className="relative">{dashboardPlayer}</div>
+        <motion.div drag className="relative">
+          {isMounted && <FloatingActions />}
+        </motion.div>
+        <div
+          className={clsx(playerShow ? 'relative' : 'absolute bottom-full')}
+          // animate={playerShow ? {} : { translateY: 100 }}
+        >
+          {dashboardPlayer}
+        </div>
       </div>
     </MaterialThemeProvider>
   );

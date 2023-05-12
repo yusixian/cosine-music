@@ -1,9 +1,9 @@
-import { fetchMusicList } from '@/api';
-import { MusicDetail, OrderType } from '@/api/type';
+import { MusicDetail, MusicStatus, OrderType } from '@/api/type';
 import EnhancedTableToolbar from '@/components/table/EnhancedTableToolbar';
 import { useFetchMusicList } from '@/hooks/dashboard/music';
 import { useTableProps, useTableSortProps } from '@/hooks/table';
-import { Button, CircularProgress, Stack, Table, TableBody, TableCell, TableContainer } from '@mui/material';
+import { globalMusicControllerAtom } from '@/store/music/state';
+import { Button, Chip, CircularProgress, IconButton, Stack, Table, TableBody, TableCell, TableContainer } from '@mui/material';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -19,6 +19,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { MdAdd, MdEdit, MdPlayCircle } from 'react-icons/md';
 import { toast } from 'react-toastify';
+import { useRecoilValue } from 'recoil';
 
 interface HeadCell {
   disablePadding: boolean;
@@ -26,7 +27,16 @@ interface HeadCell {
   label: string;
   numeric: boolean;
 }
-
+const chipColor: { [key in MusicStatus]: 'error' | 'success' | 'warning' } = {
+  [MusicStatus.UNAUDITED]: 'warning',
+  [MusicStatus.NORMAL]: 'success',
+  [MusicStatus.BANNED]: 'error',
+};
+const chipLabel = {
+  [MusicStatus.BANNED]: '不通过',
+  [MusicStatus.UNAUDITED]: '待审核',
+  [MusicStatus.NORMAL]: '通过',
+};
 const headCells: readonly HeadCell[] = [
   {
     id: 'id',
@@ -41,22 +51,34 @@ const headCells: readonly HeadCell[] = [
     label: '音乐标题',
   },
   {
+    id: 'status',
+    numeric: true,
+    disablePadding: false,
+    label: '审核状态',
+  },
+  {
     id: 'coverUrl',
     numeric: true,
     disablePadding: false,
     label: '封面图片',
   },
   {
+    id: 'foreignArtist',
+    numeric: true,
+    disablePadding: false,
+    label: '歌手',
+  },
+  {
+    id: 'description',
+    numeric: true,
+    disablePadding: false,
+    label: '音乐描述',
+  },
+  {
     id: 'playCount',
     numeric: true,
     disablePadding: false,
     label: '播放量',
-  },
-  {
-    id: 'artist',
-    numeric: true,
-    disablePadding: false,
-    label: '歌手',
   },
 ];
 
@@ -137,9 +159,9 @@ export default function MusicManageTable() {
   } = useTableProps<MusicDetail>({ selectKey: 'id', rows });
 
   const { order, orderBy, handleRequestSort } = useTableSortProps<MusicDetail>({ orderKey: 'id' });
-
+  const globalController = useRecoilValue(globalMusicControllerAtom);
   const { data, isLoading } = useFetchMusicList({ pageNum: page + 1, pageSize: rowsPerPage, order, orderBy });
-  console.log({ order, orderBy, rows });
+
   useEffect(() => {
     if (isLoading) return;
     const { list = [], total = 0 } = data ?? {};
@@ -159,12 +181,7 @@ export default function MusicManageTable() {
         <Button
           variant="contained"
           onClick={() => {
-            fetchMusicList({})
-              .then((data) => {
-                toast.success('Yes');
-                console.log(data);
-              })
-              .catch((e) => toast.error(e));
+            console.log({ selected });
           }}
           startIcon={<MdAdd />}
         >
@@ -175,7 +192,7 @@ export default function MusicManageTable() {
       <Paper sx={{ width: '100%', mb: 2 }}>
         <EnhancedTableToolbar numSelected={selected.length} title="所有音乐" />
         <TableContainer>
-          <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle" size={dense ? 'small' : 'medium'}>
+          <Table sx={{ minWidth: 850 }} aria-labelledby="tableTitle" size={dense ? 'small' : 'medium'}>
             <EnhancedTableHead
               numSelected={selected.length}
               order={order}
@@ -203,7 +220,7 @@ export default function MusicManageTable() {
                     tabIndex={-1}
                     key={row.id}
                     selected={isItemSelected}
-                    sx={{ cursor: 'pointer' }}
+                    className="cursor-pointer overflow-auto"
                   >
                     <TableCell padding="checkbox">
                       <Checkbox
@@ -215,16 +232,36 @@ export default function MusicManageTable() {
                       />
                     </TableCell>
                     <TableCell component="th" id={labelId} scope="row" padding="none">
-                      <div className="flex items-center">
-                        {row.id} <MdPlayCircle onClick={() => toast.info(`${row.id} playing!`)} className="h-9 w-9" />
+                      <div className="flex items-center gap-2">
+                        {row.id}
+                        <IconButton
+                          color="primary"
+                          aria-label="playing"
+                          onClick={() => {
+                            globalController.list.add({
+                              name: row.title,
+                              artist: row.foreignArtist,
+                              cover: row.coverUrl,
+                              lrc: row.lyric,
+                              url: row.url,
+                            });
+                            toast.info(`${row.id} 已加入播放列表!`);
+                          }}
+                        >
+                          <MdPlayCircle className="h-9 w-9" />
+                        </IconButton>
                       </div>
                     </TableCell>
-                    <TableCell align="right">{row.title}</TableCell>
-                    <TableCell align="right">
-                      <Image src={row.coverUrl as string} height={80} alt={row.title} />
+                    <TableCell align="center">{row.title}</TableCell>
+                    <TableCell align="center">
+                      <Chip className="px-3" color={chipColor[row.status]} label={chipLabel[row.status]} />
                     </TableCell>
-                    <TableCell align="right">{row.playCount}</TableCell>
-                    <TableCell align="right">{row.artist}</TableCell>
+                    <TableCell align="center">
+                      <Image src={row.coverUrl as string} height={100} width={100} alt={row.title} />
+                    </TableCell>
+                    <TableCell align="center">{row.foreignArtist}</TableCell>
+                    <TableCell align="center">{row.description}</TableCell>
+                    <TableCell align="center">{row.playCount}</TableCell>
                   </TableRow>
                 );
               })}
