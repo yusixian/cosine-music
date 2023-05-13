@@ -201,7 +201,17 @@ export default function MusicManageTable() {
         <Button variant="contained" onClick={() => router.push('/dashboard/music/add')} startIcon={<MdAdd />}>
           添加音乐
         </Button>
-        <Button variant="outlined" startIcon={<MdEdit />}>
+        <Button
+          variant="outlined"
+          onClick={() => {
+            if (!selected.length) {
+              toast.error('请至少选择一首歌曲');
+              return;
+            }
+            router.push(`/dashboard/music/edit/${selected[0]}`);
+          }}
+          startIcon={<MdEdit />}
+        >
           编辑音乐
         </Button>
         <ButtonGroup variant="contained" aria-label="outlined primary button group">
@@ -238,82 +248,84 @@ export default function MusicManageTable() {
       <Paper sx={{ width: '100%', mb: 2 }}>
         <EnhancedTableToolbar numSelected={selected.length} title="所有音乐" />
         <TableContainer>
-          <Table sx={{ minWidth: 850 }} aria-labelledby="tableTitle" size={dense ? 'small' : 'medium'}>
-            <EnhancedTableHead
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length}
-            />
-            <TableBody>
-              {isLoading && (
-                <div className="flex w-full items-center justify-center py-8">
-                  <CircularProgress />
-                </div>
-              )}
-              {rows.map((row, index) => {
-                const isItemSelected = isSelected((row as MusicDetail).id);
-                const labelId = `enhanced-table-checkbox-${index}`;
+          {isLoading ? (
+            <div className="flex w-full items-center justify-center py-8">
+              <CircularProgress />
+            </div>
+          ) : (
+            <Table sx={{ minWidth: 850 }} aria-labelledby="tableTitle" size={dense ? 'small' : 'medium'}>
+              <EnhancedTableHead
+                numSelected={selected.length}
+                order={order}
+                orderBy={orderBy}
+                onSelectAllClick={handleSelectAllClick}
+                onRequestSort={handleRequestSort}
+                rowCount={rows.length}
+              />
+              <TableBody>
+                {rows.map((row, index) => {
+                  const isItemSelected = isSelected((row as MusicDetail).id);
+                  const labelId = `enhanced-table-checkbox-${index}`;
 
-                return (
-                  <TableRow
-                    hover
-                    onClick={(event) => handleSelectClick(event, row.id)}
-                    role="checkbox"
-                    aria-checked={isItemSelected}
-                    tabIndex={-1}
-                    key={row.id}
-                    selected={isItemSelected}
-                    className="cursor-pointer overflow-auto"
-                  >
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        color="primary"
-                        checked={isItemSelected}
-                        inputProps={{
-                          'aria-labelledby': labelId,
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell component="th" id={labelId} scope="row" padding="none">
-                      <div className="flex items-center gap-2">
-                        {row.id}
-                        <IconButton
+                  return (
+                    <TableRow
+                      hover
+                      onClick={(event) => handleSelectClick(event, row.id)}
+                      role="checkbox"
+                      aria-checked={isItemSelected}
+                      tabIndex={-1}
+                      key={row.id}
+                      selected={isItemSelected}
+                      className="cursor-pointer overflow-auto"
+                    >
+                      <TableCell padding="checkbox">
+                        <Checkbox
                           color="primary"
-                          aria-label="playing"
-                          onClick={() => {
-                            globalController.list.add({
-                              name: row.title,
-                              artist: row.foreignArtist,
-                              cover: row.coverUrl,
-                              lrc: row.lyric,
-                              url: row.url,
-                            });
-                            updateMusicPlayCount(row.id).catch((e) => console.error(e));
-                            toast.info(`${row.id} 已加入播放列表!`);
+                          checked={isItemSelected}
+                          inputProps={{
+                            'aria-labelledby': labelId,
                           }}
-                        >
-                          <MdPlayCircle className="h-9 w-9" />
-                        </IconButton>
-                      </div>
-                    </TableCell>
-                    <TableCell align="center">{row.title}</TableCell>
-                    <TableCell align="center">
-                      <Chip className="px-3" color={chipColor[row.status]} label={chipLabel[row.status]} />
-                    </TableCell>
-                    <TableCell align="center">
-                      <Image src={row.coverUrl as string} height={100} width={100} alt={row.title} />
-                    </TableCell>
-                    <TableCell align="center">{row.foreignArtist}</TableCell>
-                    <TableCell align="center">{row.description}</TableCell>
-                    <TableCell align="center">{row.playCount}</TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
+                        />
+                      </TableCell>
+                      <TableCell component="th" id={labelId} scope="row" padding="none">
+                        <div className="flex items-center gap-2">
+                          {row.id}
+                          <IconButton
+                            color="primary"
+                            aria-label="playing"
+                            onClick={() => {
+                              globalController.list.add({
+                                name: row.title,
+                                artist: row.foreignArtist,
+                                cover: row.coverUrl,
+                                lrc: row.lyric,
+                                url: row.url,
+                              });
+                              globalController.play();
+                              updateMusicPlayCount(row.id).catch((e) => console.error(e));
+                              toast.info(`${row.id} 已加入播放列表!`);
+                            }}
+                          >
+                            <MdPlayCircle className="h-9 w-9" />
+                          </IconButton>
+                        </div>
+                      </TableCell>
+                      <TableCell align="center">{row.title}</TableCell>
+                      <TableCell align="center">
+                        <Chip className="px-3" color={chipColor[row.status]} label={chipLabel[row.status]} />
+                      </TableCell>
+                      <TableCell align="center">
+                        <Image src={row.coverUrl as string} height={100} width={100} alt={row.title} />
+                      </TableCell>
+                      <TableCell align="center">{row.foreignArtist}</TableCell>
+                      <TableCell align="center">{row.description}</TableCell>
+                      <TableCell align="center">{row.playCount}</TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          )}
         </TableContainer>
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}

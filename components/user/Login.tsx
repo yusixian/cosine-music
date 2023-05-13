@@ -15,7 +15,6 @@ const Login = () => {
   const handleLoginSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // TODO: Verify Param
-    console.log(username, password);
     mutationLogin.mutate({ user_name: username, password });
   };
 

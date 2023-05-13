@@ -28,7 +28,6 @@ function DMusicAdd() {
 
   const uploadCover = useUploadFile((url?: string | null) => setCover(url));
   const uploadMP3 = useUploadFile((url?: string | null) => setMP3Url(url));
-  console.log('errors!', { errors });
 
   const onSubmit = (data: MusicCreateParam) => {
     try {

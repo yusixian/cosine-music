@@ -1,5 +1,5 @@
-import { fetchMusicList, updateAuditMusic, updateMusic } from '@/api';
-import { Code, MusicDetail, MusicUpdateParam, PaginateProps, SortProps, Response, MusicAuditParam } from '@/api/type';
+import { fetchMusicDetail, fetchMusicList, updateAuditMusic } from '@/api';
+import { Code, MusicAuditParam, MusicDetail, PaginateProps, Response, SortProps } from '@/api/type';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
@@ -9,7 +9,6 @@ export const useFetchMusicList = ({ pageNum, pageSize, order, orderBy }: Paginat
     () => fetchMusicList({ pageNum, pageSize, order, orderBy }),
     {
       select: (res) => {
-        console.log('fetch music', res);
         if (res.code === Code.success) {
           return res.result;
         }
@@ -20,14 +19,18 @@ export const useFetchMusicList = ({ pageNum, pageSize, order, orderBy }: Paginat
   );
 };
 
-export const useMutationUpdateMusic = () => {
-  return useMutation<Response<MusicDetail>, any, { id: number; data: MusicUpdateParam }>({
-    mutationFn: (param) => updateMusic(param),
-    onSuccess: ({ result, code, message }) => {
-      if (code === Code.success) {
-        toast.success(message ?? '更新音乐成功！');
-        console.log({ code, result, message });
+export const useFetchMusicById = (id?: string, onSuccess?: (data: MusicDetail | null) => void) => {
+  return useQuery(['get_music_by_id', id], () => fetchMusicDetail(id), {
+    select: (res) => {
+      if (res.code === Code.success) {
+        return res.result;
       }
+      toast.error(res?.message || '获取音乐详情失败！');
+      return null;
+    },
+    onSuccess: (data) => {
+      console.log(data);
+      onSuccess?.(data);
     },
   });
 };
