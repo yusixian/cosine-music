@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styled from '@emotion/styled';
 import { twMerge } from 'tailwind-merge';
 import { FaArrowRight } from 'react-icons/fa';
+import clsx from 'clsx';
 
 export type CarouselProps = {
   className?: string;
@@ -191,7 +192,10 @@ const Carousel = (props: CarouselProps): JSX.Element => {
       dots.push(
         <div
           key={i}
-          className={twMerge('aspect-square w-2 cursor-pointer rounded-full bg-white/90', dotClass)}
+          className={twMerge(
+            clsx('aspect-square w-2 cursor-pointer rounded-full bg-white/90', { 'bg-primary': index === i + 1 }),
+            dotClass,
+          )}
           onClick={() => throttledHandleChange(i + 1)}
         ></div>,
       );
