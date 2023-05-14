@@ -5,10 +5,11 @@ import { alpha } from '@mui/material/styles';
 interface EnhancedTableToolbarProps {
   numSelected: number;
   title?: string;
+  onDelete?: () => void;
 }
 
 export default function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
-  const { numSelected, title } = props;
+  const { numSelected, title, onDelete } = props;
 
   return (
     <Toolbar
@@ -31,7 +32,7 @@ export default function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
       )}
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton color="error">
+          <IconButton color="error" onClick={onDelete}>
             <MdDelete />
           </IconButton>
         </Tooltip>

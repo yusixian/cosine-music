@@ -1,7 +1,7 @@
 import { updateMusicPlayCount } from '@/api';
 import { MusicDetail, MusicStatus, OrderType } from '@/api/type';
 import EnhancedTableToolbar from '@/components/table/EnhancedTableToolbar';
-import { useFetchMusicList, useMutationAuditMusic } from '@/hooks/dashboard/music';
+import { useFetchMusicList, useMutationAuditMusic, useMutationBatchDeleteMusic } from '@/hooks/dashboard/music';
 import { useTableProps, useTableSortProps } from '@/hooks/table';
 import { globalMusicControllerAtom } from '@/store/music/state';
 import { LoadingButton } from '@mui/lab';
@@ -28,6 +28,7 @@ import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import { visuallyHidden } from '@mui/utils';
 import { Image } from 'antd';
+import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 import { useEffect, useState, useCallback } from 'react';
 import { MdAdd, MdDoneAll, MdEdit, MdPlayCircle, MdUnpublished, MdWarning } from 'react-icons/md';
@@ -92,6 +93,24 @@ const headCells: readonly HeadCell[] = [
     numeric: true,
     disablePadding: false,
     label: '播放量',
+  },
+  {
+    id: 'createdAt',
+    numeric: true,
+    disablePadding: false,
+    label: '创建日期',
+  },
+  {
+    id: 'updatedAt',
+    numeric: true,
+    disablePadding: false,
+    label: '更新日期',
+  },
+  {
+    id: 'deletedAt',
+    numeric: true,
+    disablePadding: false,
+    label: '删除日期',
   },
 ];
 
@@ -174,7 +193,10 @@ export default function MusicManageTable() {
   const { order, orderBy, handleRequestSort } = useTableSortProps<MusicDetail>({ orderKey: 'id' });
   const globalController = useRecoilValue(globalMusicControllerAtom);
   const { data, isLoading, refetch } = useFetchMusicList({ pageNum: page + 1, pageSize: rowsPerPage, order, orderBy });
+
   const mutationMusicAudit = useMutationAuditMusic({ onSuccess: () => refetch() });
+  const mutationBatchDelete = useMutationBatchDeleteMusic({ onSuccess: () => refetch() });
+
   const batchAuditMusic = useCallback(
     (status: MusicStatus) => {
       console.log({ selected, status });
@@ -186,6 +208,15 @@ export default function MusicManageTable() {
     },
     [mutationMusicAudit, selected],
   );
+
+  const batchDeleteMusic = useCallback(() => {
+    console.log({ selected });
+    if (selected.length === 0) {
+      toast.error('请至少选择一首歌曲');
+      return;
+    }
+    mutationBatchDelete.mutate({ musicIds: selected as number[] });
+  }, [mutationBatchDelete, selected]);
 
   useEffect(() => {
     if (isLoading) return;
@@ -245,14 +276,14 @@ export default function MusicManageTable() {
         <FormControlLabel control={<Switch checked={dense} onChange={handleChangeDense} />} label="紧密视图" />
       </div>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} title="所有音乐" />
+        <EnhancedTableToolbar numSelected={selected.length} onDelete={batchDeleteMusic} title="所有音乐" />
         <TableContainer>
           {isLoading ? (
             <div className="flex w-full items-center justify-center py-8">
               <CircularProgress />
             </div>
           ) : (
-            <Table sx={{ minWidth: 850 }} aria-labelledby="tableTitle" size={dense ? 'small' : 'medium'}>
+            <Table aria-labelledby="tableTitle" size={dense ? 'small' : 'medium'}>
               <EnhancedTableHead
                 numSelected={selected.length}
                 order={order}
@@ -311,16 +342,33 @@ export default function MusicManageTable() {
                           </IconButton>
                         </div>
                       </TableCell>
-                      <TableCell align="center">{row.title}</TableCell>
-                      <TableCell align="center">
+                      <TableCell align="right">
+                        <div className="w-28 font-bold">{row.title}</div>
+                      </TableCell>
+                      <TableCell align="right">
                         <Chip className="px-3" color={chipColor[row.status]} label={chipLabel[row.status]} />
                       </TableCell>
-                      <TableCell align="center">
+                      <TableCell align="right">
                         <Image src={row.coverUrl as string} height={100} width={100} alt={row.title} />
                       </TableCell>
-                      <TableCell align="center">{row.foreignArtist}</TableCell>
-                      <TableCell align="center">{row.description}</TableCell>
-                      <TableCell align="center">{row.playCount}</TableCell>
+                      <TableCell align="right">
+                        <div className="w-20">{row.foreignArtist}</div>
+                      </TableCell>
+                      <TableCell align="right">
+                        <div className="w-36">{row.description}</div>
+                      </TableCell>
+                      <TableCell align="right">
+                        <div className="w-20">{row.playCount}</div>
+                      </TableCell>
+                      <TableCell align="right" className="whitespace-pre px-2">
+                        {row.createdAt && dayjs(row.createdAt).format('YYYY-MM-DD\nHH:mm:ss')}
+                      </TableCell>
+                      <TableCell align="right" className="whitespace-pre px-2">
+                        {row?.updatedAt && dayjs(row.updatedAt).format('YYYY-MM-DD \nHH:mm:ss')}
+                      </TableCell>
+                      <TableCell align="right" className="whitespace-pre px-2">
+                        {row?.deletedAt && dayjs(row.deletedAt).format('YYYY-MM-DD \nHH:mm:ss')}
+                      </TableCell>
                     </TableRow>
                   );
                 })}

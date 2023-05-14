@@ -153,3 +153,8 @@ export type MusicAuditParam = {
   musicIds: number[];
   status: MusicStatus;
 };
+
+export type MusicBatchDeleteParam = {
+  musicIds: number[];
+  force?: boolean;
+};

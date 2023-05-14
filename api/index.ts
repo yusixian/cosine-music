@@ -4,6 +4,7 @@ import {
   LoginParam,
   LoginResult,
   MusicAuditParam,
+  MusicBatchDeleteParam,
   MusicCreateParam,
   MusicDetail,
   MusicUpdateParam,
@@ -65,5 +66,6 @@ export const updateAuditMusic = (data: MusicAuditParam) => request.put<any, Resp
 // 更新音乐 - 播放量增长
 export const updateMusicPlayCount = (id: number) => request.put<any, Response<undefined>>(`/music/play/${id}`);
 
-// 删除音乐
-export const deleteMusic = (id: number) => request.delete<any, Response<boolean>>(`/music/delete/${id}`);
+// 删除音乐 - 批量
+export const deleteBatchMusic = (data: MusicBatchDeleteParam) =>
+  request.post<any, Response<undefined>>(`/music/batch/delete`, data);

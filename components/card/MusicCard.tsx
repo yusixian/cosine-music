@@ -46,7 +46,11 @@ export default function MusicCard({ music, className }: MusicCardProps) {
         )}
       </Box>
       {coverUrl ? (
-        <CardMedia component="img" className="h-full w-36 object-cover" image={coverUrl} alt={`${title} cover`} />
+        <div className="group h-full w-36 cursor-pointer" onClick={playMusic}>
+          <div className="h-full cursor-pointer overflow-hidden transition group-hover:brightness-95">
+            <img className="h-full object-cover transition group-hover:scale-110" src={coverUrl} alt={`${title} cover`} />
+          </div>
+        </div>
       ) : (
         <Skeleton variant="rectangular" className="h-full w-36" />
       )}

@@ -1,5 +1,5 @@
-import { fetchMusicDetail, fetchMusicList, updateAuditMusic } from '@/api';
-import { Code, MusicAuditParam, MusicDetail, PaginateProps, Response, SortProps } from '@/api/type';
+import { deleteBatchMusic, fetchMusicDetail, fetchMusicList, updateAuditMusic } from '@/api';
+import { Code, MusicAuditParam, MusicBatchDeleteParam, MusicDetail, PaginateProps, Response, SortProps } from '@/api/type';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
@@ -45,6 +45,20 @@ export const useMutationAuditMusic = ({ onSuccess }: { onSuccess: () => void }) 
         return;
       }
       toast.error(message ?? '更新音乐审核状态失败！');
+    },
+  });
+};
+
+export const useMutationBatchDeleteMusic = ({ onSuccess }: { onSuccess: () => void }) => {
+  return useMutation<Response<undefined>, any, MusicBatchDeleteParam>({
+    mutationFn: (data) => deleteBatchMusic(data),
+    onSuccess: ({ code, message }) => {
+      if (code === Code.success) {
+        toast.success(message ?? '删除音乐成功！');
+        onSuccess?.();
+        return;
+      }
+      toast.error(message ?? '删除音乐失败！');
     },
   });
 };
