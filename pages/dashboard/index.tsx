@@ -1,6 +1,6 @@
 import { UserSex } from '@/api/type';
 import Card from '@/components/card';
-import DashboardLayout from '@/components/dashboard/layout';
+import Layout from '@/components/layout';
 import LoginDialog from '@/components/user/LoginDialog';
 import { userInfoAtom, userLoginDialogAtom } from '@/store/user/state';
 import { Avatar, Button, Divider, Stack } from '@mui/material';
@@ -64,6 +64,6 @@ function Dashboard() {
 }
 
 Dashboard.getLayout = function getLayout(page: any) {
-  return <DashboardLayout>{page}</DashboardLayout>;
+  return <Layout dashboard>{page}</Layout>;
 };
 export default Dashboard;

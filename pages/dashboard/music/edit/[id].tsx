@@ -1,7 +1,7 @@
 import { updateMusic } from '@/api';
 import { MusicUpdateParam } from '@/api/type';
-import DashboardLayout from '@/components/dashboard/layout';
 import Dialog from '@/components/dialog';
+import Layout from '@/components/layout';
 import { useFetchMusicById } from '@/hooks/dashboard/music';
 import { useUploadFile } from '@/hooks/music';
 import { verifyCover } from '@/utils';
@@ -217,6 +217,6 @@ function DMusicEdit() {
 }
 
 DMusicEdit.getLayout = function getLayout(page: any) {
-  return <DashboardLayout>{page}</DashboardLayout>;
+  return <Layout dashboard>{page}</Layout>;
 };
 export default DMusicEdit;

@@ -164,10 +164,10 @@ const Carousel = (props: CarouselProps): JSX.Element => {
     if (renderLeftArrow && typeof renderLeftArrow === 'function') return renderLeftArrow({ preEvent: throttledPreItem });
     return (
       <div
-        className="absolute inset-y-0 left-0 flex cursor-pointer items-center justify-center bg-black/10 p-2"
+        className="group absolute inset-y-0 left-0 flex cursor-pointer items-center justify-center bg-black/10 p-2"
         onClick={throttledPreItem}
       >
-        <FaArrowRight className="h-5 w-5 rotate-180 fill-white" />
+        <FaArrowRight className="h-5 w-5 rotate-180 fill-white transition group-hover:scale-150 group-hover:fill-primary" />
       </div>
     );
   };
@@ -176,10 +176,13 @@ const Carousel = (props: CarouselProps): JSX.Element => {
     if (renderRightArrow && typeof renderRightArrow === 'function') return renderRightArrow({ nextEvent: throttledNextItem });
     return (
       <div
-        className="absolute inset-y-0 right-0 flex cursor-pointer items-center justify-center bg-black/10 p-2"
+        className="group absolute inset-y-0 right-0 flex cursor-pointer items-center justify-center bg-black/10 p-2"
         onClick={throttledNextItem}
       >
-        <FaArrowRight type="AiOutlineArrowLeft" className="h-5 w-5 fill-white" />
+        <FaArrowRight
+          type="AiOutlineArrowLeft"
+          className="h-5 w-5 fill-white transition group-hover:scale-150 group-hover:fill-primary"
+        />
       </div>
     );
   };

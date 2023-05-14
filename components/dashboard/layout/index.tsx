@@ -1,24 +1,22 @@
-import clsx from 'clsx';
-import { ReactNode, useMemo, useRef, useState } from 'react';
-import { ToastContainer } from 'react-toastify';
 import { UserType } from '@/api/type';
 import Search from '@/components/search';
 import { poppins } from '@/constants/font';
-import { useDashboardGlobalPlayer } from '@/hooks/music';
 import { useIsMounted } from '@/hooks/useIsMounted';
 import { useFetchUserInfoByAuth } from '@/hooks/user';
 import { userInfoAtom } from '@/store/user/state';
 import { AppBar, Box, IconButton, PaletteMode, Toolbar, Typography } from '@mui/material';
 import { ThemeProvider as MaterialThemeProvider, createTheme } from '@mui/material/styles';
+import clsx from 'clsx';
+import { motion } from 'framer-motion';
 import { useTheme } from 'next-themes';
 import { useRouter } from 'next/router';
+import { ReactNode, useMemo, useRef, useState } from 'react';
 import { MdArrowBackIosNew, MdMenu } from 'react-icons/md';
+import { ToastContainer } from 'react-toastify';
 import { useRecoilValue } from 'recoil';
 import NotFound from '../notfound/NotFound';
 import FloatingActions from './FloatingActions';
 import DashboardNavigator from './navigator';
-import { motion } from 'framer-motion';
-import { globalConfigAtom } from '@/store/music/state';
 
 export default function DashboardLayout({ children }: { children?: ReactNode }) {
   const { theme } = useTheme();
@@ -41,8 +39,6 @@ export default function DashboardLayout({ children }: { children?: ReactNode }) 
   useFetchUserInfoByAuth();
   const userInfo = useRecoilValue(userInfoAtom);
   const router = useRouter();
-  const dashboardPlayer = useDashboardGlobalPlayer();
-  const { playerShow } = useRecoilValue(globalConfigAtom);
   const containerRef = useRef(null);
   const isMounted = useIsMounted();
   return (
@@ -93,7 +89,6 @@ export default function DashboardLayout({ children }: { children?: ReactNode }) 
         <motion.div drag dragConstraints={containerRef} className="relative">
           {isMounted && <FloatingActions />}
         </motion.div>
-        <div className={clsx(playerShow ? 'relative' : 'absolute bottom-full')}>{dashboardPlayer}</div>
       </div>
     </MaterialThemeProvider>
   );

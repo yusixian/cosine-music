@@ -1,7 +1,7 @@
 import { createMusic } from '@/api';
 import { MusicCreateParam } from '@/api/type';
-import DashboardLayout from '@/components/dashboard/layout';
 import Dialog from '@/components/dialog';
+import Layout from '@/components/layout';
 import { useUploadFile } from '@/hooks/music';
 import { verifyCover } from '@/utils';
 import { LoadingButton } from '@mui/lab';
@@ -196,6 +196,6 @@ function DMusicAdd() {
   );
 }
 DMusicAdd.getLayout = function getLayout(page: any) {
-  return <DashboardLayout>{page}</DashboardLayout>;
+  return <Layout dashboard>{page}</Layout>;
 };
 export default DMusicAdd;

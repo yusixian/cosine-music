@@ -175,7 +175,6 @@ export default function MusicManageTable() {
   const globalController = useRecoilValue(globalMusicControllerAtom);
   const { data, isLoading, refetch } = useFetchMusicList({ pageNum: page + 1, pageSize: rowsPerPage, order, orderBy });
   const mutationMusicAudit = useMutationAuditMusic({ onSuccess: () => refetch() });
-
   const batchAuditMusic = useCallback(
     (status: MusicStatus) => {
       console.log({ selected, status });
@@ -294,6 +293,7 @@ export default function MusicManageTable() {
                             color="primary"
                             aria-label="playing"
                             onClick={() => {
+                              const len = globalController.list?.audios?.length;
                               globalController.list.add({
                                 name: row.title,
                                 artist: row.foreignArtist,
@@ -301,6 +301,7 @@ export default function MusicManageTable() {
                                 lrc: row.lyric,
                                 url: row.url,
                               });
+                              globalController.list.switch(len);
                               globalController.play();
                               updateMusicPlayCount(row.id).catch((e) => console.error(e));
                               toast.info(`${row.id} 已加入播放列表!`);

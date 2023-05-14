@@ -1,5 +1,5 @@
-import DashboardLayout from '@/components/dashboard/layout';
 import MusicManageTable from '@/components/dashboard/music/MusicManageTable';
+import Layout from '@/components/layout';
 import { Breadcrumbs, Link, Stack, Typography } from '@mui/material';
 function DMusic() {
   return (
@@ -17,6 +17,6 @@ function DMusic() {
   );
 }
 DMusic.getLayout = function getLayout(page: any) {
-  return <DashboardLayout>{page}</DashboardLayout>;
+  return <Layout dashboard>{page}</Layout>;
 };
 export default DMusic;

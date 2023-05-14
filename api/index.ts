@@ -46,6 +46,12 @@ export const createMusic = (data: MusicCreateParam) => request.post<any, Respons
 export const fetchMusicList = ({ pageNum, pageSize, order, orderBy }: PaginateProps & SortProps) =>
   request.get<any, Response<PaginatedData<MusicDetail>>>('/music/all', { params: { pageNum, pageSize, order, orderBy } });
 
+// 获取音乐列表
+export const fetchPublicMusicList = ({ pageNum, pageSize, order, orderBy }: PaginateProps & SortProps) =>
+  request.get<any, Response<PaginatedData<MusicDetail>>>('/music/all/public', {
+    params: { pageNum, pageSize, order, orderBy },
+  });
+
 // 获取音乐详情
 export const fetchMusicDetail = (id?: string) => request.get<any, Response<MusicDetail>>(`/music/detail/${id}`);
 

@@ -1,4 +1,4 @@
-import DashboardLayout from '@/components/dashboard/layout';
+import Layout from '@/components/layout';
 import { Breadcrumbs, Link, Typography } from '@mui/material';
 
 function DPlaylist() {
@@ -15,6 +15,6 @@ function DPlaylist() {
 }
 
 DPlaylist.getLayout = function getLayout(page: any) {
-  return <DashboardLayout>{page}</DashboardLayout>;
+  return <Layout dashboard>{page}</Layout>;
 };
 export default DPlaylist;
