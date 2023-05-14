@@ -86,7 +86,7 @@ export default function DashboardLayout({ children }: { children?: ReactNode }) 
             <NotFound message="没有权限！请返回主页登录" onClick={() => router.push('/my')} />
           )}
         </div>
-        <motion.div drag dragConstraints={containerRef} className="relative">
+        <motion.div drag dragConstraints={containerRef} className="absolute right-0 bottom-20">
           {isMounted && <FloatingActions />}
         </motion.div>
       </div>

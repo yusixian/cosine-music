@@ -56,7 +56,7 @@ export default function Layout({ children, dashboard }: { children?: ReactNode; 
             <Header />
             <div id="player" className="bg-red-400"></div>
             <main className="relative w-full flex-grow overflow-auto">{children}</main>
-            <motion.div drag dragConstraints={containerRef} className="relative">
+            <motion.div drag dragConstraints={containerRef} className="absolute right-0 bottom-20">
               {isMounted && <FloatingActions />}
             </motion.div>
           </div>
