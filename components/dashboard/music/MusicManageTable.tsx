@@ -346,27 +346,29 @@ export default function MusicManageTable() {
                         <div className="w-28 font-bold">{row.title}</div>
                       </TableCell>
                       <TableCell align="right">
-                        <Chip className="px-3" color={chipColor[row.status]} label={chipLabel[row.status]} />
+                        <div className="w-[5.5rem]">
+                          <Chip className="px-2" color={chipColor[row.status]} label={chipLabel[row.status]} />
+                        </div>
                       </TableCell>
                       <TableCell align="right">
                         <Image src={row.coverUrl as string} height={100} width={100} alt={row.title} />
                       </TableCell>
-                      <TableCell align="right">
-                        <div className="w-20">{row.foreignArtist}</div>
+                      <TableCell align="center">
+                        <div className="w-[5.5rem]">{row.foreignArtist}</div>
                       </TableCell>
-                      <TableCell align="right">
+                      <TableCell align="center">
                         <div className="w-36">{row.description}</div>
                       </TableCell>
                       <TableCell align="right">
-                        <div className="w-20">{row.playCount}</div>
+                        <div className="w-[5.2rem]">{row.playCount}</div>
                       </TableCell>
-                      <TableCell align="right" className="whitespace-pre px-2">
+                      <TableCell align="center" className="whitespace-pre px-2">
                         {row.createdAt && dayjs(row.createdAt).format('YYYY-MM-DD\nHH:mm:ss')}
                       </TableCell>
-                      <TableCell align="right" className="whitespace-pre px-2">
+                      <TableCell align="center" className="whitespace-pre px-2">
                         {row?.updatedAt && dayjs(row.updatedAt).format('YYYY-MM-DD \nHH:mm:ss')}
                       </TableCell>
-                      <TableCell align="right" className="whitespace-pre px-2">
+                      <TableCell align="center" className="whitespace-pre px-2">
                         {row?.deletedAt && dayjs(row.deletedAt).format('YYYY-MM-DD \nHH:mm:ss')}
                       </TableCell>
                     </TableRow>
