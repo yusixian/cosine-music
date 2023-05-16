@@ -13,6 +13,7 @@ import {
   RegisterParam,
   Response,
   SortProps,
+  Tag,
   User,
 } from './type';
 
@@ -69,3 +70,9 @@ export const updateMusicPlayCount = (id: number) => request.put<any, Response<un
 // 删除音乐 - 批量
 export const deleteBatchMusic = (data: MusicBatchDeleteParam) =>
   request.post<any, Response<undefined>>(`/music/batch/delete`, data);
+
+// 获取标签列表
+export const fetchTagList = ({ pageNum, pageSize, order, orderBy }: PaginateProps & SortProps) =>
+  request.get<any, Response<PaginatedData<Tag>>>('/tag/all', {
+    params: { pageNum, pageSize, order, orderBy },
+  });

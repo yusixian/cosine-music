@@ -22,7 +22,7 @@ const routers: {
   type?: UserType;
 }[] = [
   { name: '首页', path: '/' },
-  { name: '推荐', path: '/recommend' },
+  { name: '分类', path: '/tag' },
   { name: '我的', path: '/my' },
   { name: '关于', path: '/about' },
   { name: '去后台', path: '/dashboard', type: UserType.ADMIN },

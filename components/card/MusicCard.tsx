@@ -1,6 +1,6 @@
 import { MusicDetail } from '@/api/type';
 import { usePlayMusic } from '@/hooks/music';
-import { Box, Card, CardContent, CardMedia, Fab, Skeleton, Typography } from '@mui/material';
+import { Box, Card, CardContent, Fab, Skeleton, Typography } from '@mui/material';
 import { MdPlayArrow } from 'react-icons/md';
 import { twMerge } from 'tailwind-merge';
 

@@ -158,3 +158,13 @@ export type MusicBatchDeleteParam = {
   musicIds: number[];
   force?: boolean;
 };
+
+export type Tag = {
+  id: number;
+  name: string;
+  icon: string;
+  color: string;
+  createdAt: string;
+  updatedAt: string;
+  musics: MusicDetail[];
+};
