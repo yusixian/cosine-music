@@ -32,6 +32,7 @@ export const useFetchMusicById = (id?: string, onSuccess?: (data: MusicDetail | 
       console.log(data);
       onSuccess?.(data);
     },
+    enabled: !!id,
   });
 };
 

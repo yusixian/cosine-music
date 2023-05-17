@@ -18,3 +18,33 @@ export const verifyCover = (file: File) => {
   }
   return true;
 };
+
+/**
+ * lrc格式歌词格式化
+ */
+type LrcObj = { time: number; text?: string };
+export function lrcFormat(lrc?: string): LrcObj[] {
+  if (!lrc) return [];
+  const lyric: LrcObj[] = [];
+  const lrcArr = lrc.split('\n');
+  // 记录行数
+  const row = lrcArr.length - 1;
+  // 循环遍历lrcArr
+  for (let i = 0; i < row; i++) {
+    const itemArr = lrcArr[i].split(']');
+    // 取出文字部分
+    const text = itemArr.pop();
+    // 取出时间部分
+    itemArr.forEach((ele) => {
+      const timeArr = ele
+        .slice(1, ele.length - 1)
+        .split(':')
+        .map((v) => parseInt(v));
+      let s = timeArr[0] * 60 + Math.ceil(timeArr[1]);
+      // 存储到状态
+      lyric.push({ time: s, text });
+    });
+  }
+  console.log({ lyric });
+  return lyric;
+}

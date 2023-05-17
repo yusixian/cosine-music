@@ -81,7 +81,7 @@ export const useFetchPublicMusicList = ({
   );
 };
 
-export const usePlayMusic = (music?: MusicDetail) => {
+export const usePlayMusic = (music?: MusicDetail | null) => {
   const globalController = useRecoilValue(globalMusicControllerAtom);
   const playMusic = useCallback(() => {
     if (!music) return null;
@@ -97,7 +97,7 @@ export const usePlayMusic = (music?: MusicDetail) => {
     globalController.list.switch(len);
     globalController.play();
     updateMusicPlayCount(id).catch((e) => console.log(e));
-    toast.info(`${id} 已加入播放列表!`);
+    toast(`${title} 已加入播放列表!`);
   }, [globalController, music]);
   return {
     playMusic,

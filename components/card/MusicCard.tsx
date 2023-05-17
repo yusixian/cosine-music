@@ -1,6 +1,7 @@
 import { MusicDetail } from '@/api/type';
 import { usePlayMusic } from '@/hooks/music';
 import { Box, Card, CardContent, Fab, Skeleton, Typography } from '@mui/material';
+import { useRouter } from 'next/router';
 import { MdPlayArrow } from 'react-icons/md';
 import { twMerge } from 'tailwind-merge';
 
@@ -9,12 +10,13 @@ type MusicCardProps = {
   className?: string;
 };
 export default function MusicCard({ music, className }: MusicCardProps) {
-  const { title, description, foreignArtist, playCount, coverUrl } = music ?? {};
+  const router = useRouter();
+  const { id, title, description, foreignArtist, playCount, coverUrl } = music ?? {};
   const { playMusic } = usePlayMusic(music);
   return (
-    <Card className={twMerge('flex', className)}>
+    <Card className={twMerge('flex h-fit', className)}>
       <Box className="relative flex flex-grow flex-col">
-        <CardContent>
+        <CardContent className="cursor-pointer" onClick={() => router.push(`/music/detail/${id}`)}>
           {music ? (
             <>
               <Typography component="div" variant="h6">
@@ -46,9 +48,13 @@ export default function MusicCard({ music, className }: MusicCardProps) {
         )}
       </Box>
       {coverUrl ? (
-        <div className="group h-full w-36 cursor-pointer" onClick={playMusic}>
+        <div className="group w-36 cursor-pointer" onClick={playMusic}>
           <div className="h-full cursor-pointer overflow-hidden transition group-hover:brightness-95">
-            <img className="h-full object-cover transition group-hover:scale-110" src={coverUrl} alt={`${title} cover`} />
+            <img
+              className="h-full w-full object-cover transition group-hover:scale-110"
+              src={coverUrl}
+              alt={`${title} cover`}
+            />
           </div>
         </div>
       ) : (
