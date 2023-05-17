@@ -4,7 +4,6 @@ import Dialog from '@/components/dialog';
 import Layout from '@/components/layout';
 import { useUploadFile } from '@/hooks/music';
 import { verifyCover } from '@/utils';
-import { LoadingButton } from '@mui/lab';
 import { Box, Breadcrumbs, Button, Link, Stack, TextField, Typography } from '@mui/material';
 import { Upload } from 'antd';
 import { useRouter } from 'next/router';
@@ -178,9 +177,9 @@ function DMusicAdd() {
                 <Button size="large" type="reset" variant="outlined" startIcon={<MdDelete />}>
                   重置
                 </Button>
-                <LoadingButton size="large" type="submit" loading={false} variant="contained" startIcon={<MdDoneAll />}>
+                <Button size="large" type="submit" variant="contained" startIcon={<MdDoneAll />}>
                   确认添加
-                </LoadingButton>
+                </Button>
               </div>
             </Stack>
           </Stack>

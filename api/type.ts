@@ -170,3 +170,9 @@ export type Tag = {
   updatedAt: string;
   musics: MusicDetail[];
 };
+
+export type TagCreateParam = {
+  name: string;
+  icon?: string;
+  color?: string;
+};

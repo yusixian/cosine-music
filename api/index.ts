@@ -14,6 +14,7 @@ import {
   Response,
   SortProps,
   Tag,
+  TagCreateParam,
   User,
 } from './type';
 
@@ -76,3 +77,5 @@ export const fetchTagList = ({ pageNum, pageSize = 30, order, orderBy }: Paginat
   request.get<any, Response<PaginatedData<Tag>>>('/tag/all', {
     params: { pageNum, pageSize, order, orderBy },
   });
+
+export const createTag = (data: TagCreateParam) => request.post<any, Response<Tag>>('/tag/create', data);

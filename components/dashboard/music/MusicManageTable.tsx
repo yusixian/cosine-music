@@ -1,5 +1,6 @@
 import { updateMusicPlayCount } from '@/api';
-import { MusicDetail, MusicStatus, OrderType } from '@/api/type';
+import { MusicDetail, MusicStatus } from '@/api/type';
+import EnhancedTableHead, { HeadCell } from '@/components/table/EnhancedTableHead';
 import EnhancedTableToolbar from '@/components/table/EnhancedTableToolbar';
 import { useFetchMusicList, useMutationAuditMusic, useMutationBatchDeleteMusic } from '@/hooks/dashboard/music';
 import { useTableProps, useTableSortProps } from '@/hooks/table';
@@ -18,30 +19,20 @@ import {
   TableCell,
   TableContainer,
 } from '@mui/material';
-import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Paper from '@mui/material/Paper';
 import Switch from '@mui/material/Switch';
-import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import TableSortLabel from '@mui/material/TableSortLabel';
-import { visuallyHidden } from '@mui/utils';
 import { Image } from 'antd';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
-import { useEffect, useState, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { MdAdd, MdDoneAll, MdEdit, MdPlayCircle, MdUnpublished, MdWarning } from 'react-icons/md';
 import { toast } from 'react-toastify';
 import { useRecoilValue } from 'recoil';
 
-interface HeadCell {
-  disablePadding: boolean;
-  id: keyof MusicDetail;
-  label: string;
-  numeric: boolean;
-}
 const chipColor: { [key in MusicStatus]: 'error' | 'success' | 'warning' } = {
   [MusicStatus.UNAUDITED]: 'warning',
   [MusicStatus.NORMAL]: 'success',
@@ -52,7 +43,7 @@ const chipLabel = {
   [MusicStatus.UNAUDITED]: '待审核',
   [MusicStatus.NORMAL]: '通过',
 };
-const headCells: readonly HeadCell[] = [
+const headCells: readonly HeadCell<MusicDetail>[] = [
   {
     id: 'id',
     numeric: false,
@@ -120,61 +111,6 @@ const headCells: readonly HeadCell[] = [
     label: '删除日期',
   },
 ];
-
-interface EnhancedTableProps {
-  numSelected: number;
-  onRequestSort: (event: React.MouseEvent<unknown>, property: keyof MusicDetail) => void;
-  onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  order: OrderType;
-  orderBy: string;
-  rowCount: number;
-}
-
-function EnhancedTableHead(props: EnhancedTableProps) {
-  const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
-  const createSortHandler = (property: keyof MusicDetail) => (event: React.MouseEvent<unknown>) => {
-    onRequestSort(event, property);
-  };
-
-  return (
-    <TableHead>
-      <TableRow>
-        <TableCell padding="checkbox">
-          <Checkbox
-            color="primary"
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{
-              'aria-label': 'select all desserts',
-            }}
-          />
-        </TableCell>
-        {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'normal'}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                </Box>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
-  );
-}
 
 export default function MusicManageTable() {
   const router = useRouter();
@@ -291,7 +227,8 @@ export default function MusicManageTable() {
             </div>
           ) : (
             <Table aria-labelledby="tableTitle" size={dense ? 'small' : 'medium'}>
-              <EnhancedTableHead
+              <EnhancedTableHead<MusicDetail>
+                headCells={headCells}
                 numSelected={selected.length}
                 order={order}
                 orderBy={orderBy}

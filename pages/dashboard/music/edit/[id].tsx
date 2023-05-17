@@ -64,10 +64,10 @@ function DMusicEdit() {
   return (
     <main className="mx-auto flex max-w-screen-lg flex-col gap-3 p-4">
       <Breadcrumbs aria-label="breadcrumb">
-        <Link color="inherit" onClick={() => router.push('/dashboard')}>
+        <Link color="inherit" className="cursor-pointer" underline="hover" onClick={() => router.push('/dashboard')}>
           仪表盘
         </Link>
-        <Link color="inherit" onClick={() => router.push('/dashboard/music')}>
+        <Link color="inherit" className="cursor-pointer" underline="hover" onClick={() => router.push('/dashboard/music')}>
           音乐管理
         </Link>
         <Typography color="text.primary">编辑音乐</Typography>
