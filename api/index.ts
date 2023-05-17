@@ -8,6 +8,7 @@ import {
   MusicCreateParam,
   MusicDetail,
   MusicUpdateParam,
+  MusicWhereOpt,
   PaginateProps,
   PaginatedData,
   RegisterParam,
@@ -52,9 +53,15 @@ export const fetchMusicList = ({ pageNum, pageSize, order, orderBy }: PaginatePr
   request.get<any, Response<PaginatedData<MusicDetail>>>('/music/all', { params: { pageNum, pageSize, order, orderBy } });
 
 // 获取音乐列表
-export const fetchPublicMusicList = ({ pageNum, pageSize, order, orderBy }: PaginateProps & SortProps) =>
+export const fetchPublicMusicList = ({
+  pageNum,
+  pageSize,
+  order,
+  orderBy,
+  tagNames,
+}: PaginateProps & SortProps & MusicWhereOpt) =>
   request.get<any, Response<PaginatedData<MusicDetail>>>('/music/all/public', {
-    params: { pageNum, pageSize, order, orderBy },
+    params: { pageNum, pageSize, order, orderBy, tagNames },
   });
 
 // 获取音乐详情

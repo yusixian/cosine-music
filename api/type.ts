@@ -161,6 +161,8 @@ export type MusicBatchDeleteParam = {
   force?: boolean;
 };
 
+export type MusicWhereOpt = { tagNames: string[] };
+
 export type Tag = {
   id: number;
   name: string;

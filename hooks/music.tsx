@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { useIsMounted } from './useIsMounted';
 import { globalMusicControllerAtom } from '@/store/music/state';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { Code, MusicDetail, PaginateProps, SortProps } from '@/api/type';
+import { Code, MusicDetail, MusicWhereOpt, PaginateProps, SortProps } from '@/api/type';
 import { useQuery } from '@tanstack/react-query';
 
 export const useUploadFile = (onSuccess: (url: string | null) => void) => {
@@ -59,10 +59,16 @@ export const useDashboardGlobalPlayer = () => {
   return <div id="dashboard-global-player"></div>;
 };
 
-export const useFetchPublicMusicList = ({ pageNum, pageSize, order, orderBy }: PaginateProps & SortProps) => {
+export const useFetchPublicMusicList = ({
+  pageNum,
+  pageSize,
+  order,
+  orderBy,
+  tagNames,
+}: PaginateProps & SortProps & MusicWhereOpt) => {
   return useQuery(
-    ['get_public_music_list', pageNum, pageSize, order, orderBy],
-    () => fetchPublicMusicList({ pageNum, pageSize, order, orderBy }),
+    ['get_public_music_list', pageNum, pageSize, order, orderBy, tagNames],
+    () => fetchPublicMusicList({ pageNum, pageSize, order, orderBy, tagNames }),
     {
       select: (res) => {
         if (res.code === Code.success) {
