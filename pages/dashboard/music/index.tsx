@@ -3,7 +3,7 @@ import Layout from '@/components/layout';
 import { Breadcrumbs, Link, Stack, Typography } from '@mui/material';
 function DMusic() {
   return (
-    <main className="mx-auto flex max-w-screen-lg flex-col gap-3 p-4">
+    <main className="mx-auto flex max-w-screen-lg flex-col gap-3 p-4 pb-28">
       <Breadcrumbs aria-label="breadcrumb">
         <Link color="inherit" href="/dashboard">
           仪表盘

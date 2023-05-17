@@ -148,7 +148,7 @@ export type MusicUpdateParam = {
   lyric?: string;
   lyricAuthorId?: number;
   status?: MusicStatus; // 0:未审核 1:正常 2:封禁
-  tags?: Partial<Tag>[]; // 0:未审核 1:正常 2:封禁
+  tagNames: string[];
 };
 
 export type MusicAuditParam = {

@@ -11,6 +11,7 @@ import {
   Chip,
   CircularProgress,
   IconButton,
+  Pagination,
   Stack,
   Table,
   TableBody,
@@ -391,15 +392,25 @@ export default function MusicManageTable() {
             </Table>
           )}
         </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={total}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+        <div className="mt-4 flex items-center justify-between gap-2">
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={total}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            showFirstButton
+            showLastButton
+          />
+          <Pagination
+            color="primary"
+            page={page + 1}
+            onChange={(e, newPage) => handleChangePage(e, newPage - 1)}
+            count={data?.totalPages}
+          />
+        </div>
       </Paper>
     </Stack>
   );

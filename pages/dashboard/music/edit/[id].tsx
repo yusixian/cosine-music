@@ -38,9 +38,8 @@ function DMusicEdit() {
 
   const onSubmit = (data: MusicUpdateParam) => {
     try {
-      const tagNames = tags.map((tag) => ({ name: tag }));
-      console.log('onSubmit!', { id, data: { ...data, tags: tagNames } });
-      updateMusic({ id, data: { ...data, tags: tagNames } }).then(() => {
+      console.log('onSubmit!', { id, data: { ...data, tags } });
+      updateMusic({ id, data: { ...data, tagNames: tags } }).then(() => {
         toast.success('更新成功！');
         console.log({ data });
         router.push('/dashboard/music');
@@ -65,10 +64,10 @@ function DMusicEdit() {
   return (
     <main className="mx-auto flex max-w-screen-lg flex-col gap-3 p-4">
       <Breadcrumbs aria-label="breadcrumb">
-        <Link color="inherit" href="/dashboard">
+        <Link color="inherit" onClick={() => router.push('/dashboard')}>
           仪表盘
         </Link>
-        <Link color="inherit" href="/dashboard/music">
+        <Link color="inherit" onClick={() => router.push('/dashboard/music')}>
           音乐管理
         </Link>
         <Typography color="text.primary">编辑音乐</Typography>

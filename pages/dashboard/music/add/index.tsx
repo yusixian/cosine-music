@@ -7,6 +7,7 @@ import { verifyCover } from '@/utils';
 import { LoadingButton } from '@mui/lab';
 import { Box, Breadcrumbs, Button, Link, Stack, TextField, Typography } from '@mui/material';
 import { Upload } from 'antd';
+import { useRouter } from 'next/router';
 import { ChangeEvent, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { AiOutlineInbox } from 'react-icons/ai';
@@ -21,7 +22,7 @@ function DMusicAdd() {
     formState: { errors },
   } = useForm<MusicCreateParam>();
   // const [musicData, setMusicData] = useState<MusicDetail | undefined>(undefined);
-
+  const router = useRouter();
   const [previewOpen, setPreviewOpen] = useState(false);
   const [cover, setCover] = useState<string | null | undefined>('');
   const [mp3Url, setMP3Url] = useState<string | null | undefined>('');
@@ -46,10 +47,10 @@ function DMusicAdd() {
   return (
     <main className="mx-auto flex max-w-screen-lg flex-col gap-3 p-4">
       <Breadcrumbs aria-label="breadcrumb">
-        <Link color="inherit" href="/dashboard">
+        <Link color="inherit" onClick={() => router.push('/dashboard')}>
           仪表盘
         </Link>
-        <Link color="inherit" href="/dashboard/music">
+        <Link color="inherit" onClick={() => router.push('/dashboard/music')}>
           音乐管理
         </Link>
         <Typography color="text.primary">添加音乐</Typography>
