@@ -314,13 +314,13 @@ export default function MusicManageTable() {
                         </div>
                       </TableCell>
                       <TableCell align="center" className="whitespace-pre px-2">
-                        {row.createdAt && dayjs(row.createdAt).format('YYYY-MM-DD\nHH:mm:ss')}
+                        <div className="w-[7rem]">{row.createdAt && dayjs(row.createdAt).format('YYYY-MM-DD\nHH:mm:ss')}</div>
                       </TableCell>
                       <TableCell align="center" className="whitespace-pre px-2">
-                        {row?.updatedAt && dayjs(row.updatedAt).format('YYYY-MM-DD \nHH:mm:ss')}
+                        <div className="w-[7rem]">{row?.updatedAt && dayjs(row.updatedAt).format('YYYY-MM-DD \nHH:mm:ss')}</div>
                       </TableCell>
                       <TableCell align="center" className="whitespace-pre px-2">
-                        {row?.deletedAt && dayjs(row.deletedAt).format('YYYY-MM-DD \nHH:mm:ss')}
+                        <div className="w-[7rem]">{row?.deletedAt && dayjs(row.deletedAt).format('YYYY-MM-DD \nHH:mm:ss')}</div>
                       </TableCell>
                     </TableRow>
                   );

@@ -1,7 +1,7 @@
 import { Tag } from '@/api/type';
 import EnhancedTableHead, { HeadCell } from '@/components/table/EnhancedTableHead';
 import EnhancedTableToolbar from '@/components/table/EnhancedTableToolbar';
-import { useMutationBatchDeleteMusic } from '@/hooks/dashboard/music';
+import { useMutationBatchDeleteTag } from '@/hooks/dashboard/tag';
 import { useTableProps, useTableSortProps } from '@/hooks/table';
 import { useFetchTagList } from '@/hooks/tag';
 import { Button, CircularProgress, Pagination, Stack, Table, TableBody, TableCell, TableContainer } from '@mui/material';
@@ -80,15 +80,15 @@ export default function TagManageTable() {
   const { order, orderBy, handleRequestSort } = useTableSortProps<Tag>({ orderKey: 'id' });
   const { data, isLoading, refetch } = useFetchTagList({ pageNum: page + 1, pageSize: rowsPerPage, order, orderBy });
 
-  const mutationBatchDelete = useMutationBatchDeleteMusic({ onSuccess: () => refetch() });
+  const mutationBatchDelete = useMutationBatchDeleteTag({ onSuccess: () => refetch() });
 
   const batchDeleteTag = useCallback(() => {
     console.log({ selected });
     if (selected.length === 0) {
-      toast.error('请至少选择一首歌曲');
+      toast.error('请至少选择一个标签');
       return;
     }
-    mutationBatchDelete.mutate({ musicIds: selected as number[] });
+    mutationBatchDelete.mutate({ tagIds: selected as number[] });
   }, [mutationBatchDelete, selected]);
 
   useEffect(() => {

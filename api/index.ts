@@ -14,7 +14,9 @@ import {
   Response,
   SortProps,
   Tag,
+  TagBatchDeleteParam,
   TagCreateParam,
+  TagUpdateParam,
   User,
 } from './type';
 
@@ -79,3 +81,13 @@ export const fetchTagList = ({ pageNum, pageSize = 30, order, orderBy }: Paginat
   });
 
 export const createTag = (data: TagCreateParam) => request.post<any, Response<Tag>>('/tag/create', data);
+
+// 获取标签详情
+export const fetchTagById = (id?: string) => request.get<any, Response<Tag>>(`/tag/detail/${id}`);
+
+// 更新音乐
+export const updateTag = ({ id, data }: { id?: string; data: TagUpdateParam }) =>
+  request.put<any, Response<Tag>>(`/tag/update/${id}`, data);
+
+// 删除标签 - 批量
+export const deleteBatchTag = (data: TagBatchDeleteParam) => request.post<any, Response<undefined>>(`/tag/batch/delete`, data);

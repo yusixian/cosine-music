@@ -176,3 +176,12 @@ export type TagCreateParam = {
   icon?: string;
   color?: string;
 };
+export type TagUpdateParam = {
+  name: string;
+  icon?: string;
+  color?: string;
+};
+
+export type TagBatchDeleteParam = {
+  tagIds: number[];
+};

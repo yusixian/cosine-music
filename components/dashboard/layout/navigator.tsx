@@ -20,10 +20,10 @@ const routers: {
   { name: '仪表盘', path: '/' },
   { name: '首页管理', path: '/home' },
   { name: '音乐管理', path: '/music' },
-  { name: '歌单管理', path: '/playlist' },
-  { name: '用户管理', path: '/user' },
-  { name: '分区管理', path: '/category' },
   { name: '标签管理', path: '/tag' },
+  // { name: '歌单管理', path: '/playlist' },
+  // { name: '用户管理', path: '/user' },
+  // { name: '分区管理', path: '/category' },
 ];
 
 export default function DashboardNavigator({ className, open }: { className?: string; open?: boolean }) {
