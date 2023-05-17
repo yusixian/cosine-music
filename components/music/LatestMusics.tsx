@@ -1,11 +1,14 @@
 import MusicCard from '@/components/card/MusicCard';
 import { useFetchPublicMusicList } from '@/hooks/music';
-import { CircularProgress } from '@mui/material';
+import { CircularProgress, Pagination } from '@mui/material';
+import { useState } from 'react';
 
 export default function LatestMusics() {
-  const { data, isLoading } = useFetchPublicMusicList({ order: 'desc', orderBy: 'createdAt' });
+  const [pageNum, setPage] = useState(1);
+  const { data, isLoading } = useFetchPublicMusicList({ pageNum, order: 'desc', orderBy: 'createdAt' });
+
   return (
-    <div>
+    <div className="flex flex-col gap-4 pb-20">
       {isLoading ? (
         <CircularProgress />
       ) : (
@@ -17,6 +20,14 @@ export default function LatestMusics() {
               })}
             </div>
           ) : null}
+          <Pagination
+            page={pageNum}
+            onChange={(e, page) => setPage(page)}
+            count={data?.totalPages}
+            color="primary"
+            showFirstButton
+            showLastButton
+          />
         </>
       )}
     </div>

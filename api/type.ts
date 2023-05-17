@@ -135,6 +135,7 @@ export type MusicDetail = {
   createdAt: string;
   updatedAt?: string;
   deletedAt?: string;
+  tags: Tag[];
 };
 
 export type MusicUpdateParam = {
@@ -147,6 +148,7 @@ export type MusicUpdateParam = {
   lyric?: string;
   lyricAuthorId?: number;
   status?: MusicStatus; // 0:未审核 1:正常 2:封禁
+  tags?: Partial<Tag>[]; // 0:未审核 1:正常 2:封禁
 };
 
 export type MusicAuditParam = {
@@ -162,8 +164,8 @@ export type MusicBatchDeleteParam = {
 export type Tag = {
   id: number;
   name: string;
-  icon: string;
-  color: string;
+  icon?: string;
+  color?: string;
   createdAt: string;
   updatedAt: string;
   musics: MusicDetail[];

@@ -72,7 +72,7 @@ export const deleteBatchMusic = (data: MusicBatchDeleteParam) =>
   request.post<any, Response<undefined>>(`/music/batch/delete`, data);
 
 // 获取标签列表
-export const fetchTagList = ({ pageNum, pageSize, order, orderBy }: PaginateProps & SortProps) =>
+export const fetchTagList = ({ pageNum, pageSize = 30, order, orderBy }: PaginateProps & SortProps) =>
   request.get<any, Response<PaginatedData<Tag>>>('/tag/all', {
     params: { pageNum, pageSize, order, orderBy },
   });

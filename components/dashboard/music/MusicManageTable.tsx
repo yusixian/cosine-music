@@ -95,6 +95,12 @@ const headCells: readonly HeadCell[] = [
     label: '播放量',
   },
   {
+    id: 'tags',
+    numeric: true,
+    disablePadding: false,
+    label: '标签',
+  },
+  {
     id: 'createdAt',
     numeric: true,
     disablePadding: false,
@@ -361,6 +367,13 @@ export default function MusicManageTable() {
                       </TableCell>
                       <TableCell align="right">
                         <div className="w-[5.2rem]">{row.playCount}</div>
+                      </TableCell>
+                      <TableCell align="right">
+                        <div className="flex w-[7rem] flex-wrap items-center gap-2">
+                          {row.tags.map(({ name, id }) => (
+                            <Chip key={id} label={name} />
+                          ))}
+                        </div>
                       </TableCell>
                       <TableCell align="center" className="whitespace-pre px-2">
                         {row.createdAt && dayjs(row.createdAt).format('YYYY-MM-DD\nHH:mm:ss')}

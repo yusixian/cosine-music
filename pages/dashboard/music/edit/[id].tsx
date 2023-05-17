@@ -2,6 +2,7 @@ import { updateMusic } from '@/api';
 import { MusicUpdateParam } from '@/api/type';
 import Dialog from '@/components/dialog';
 import Layout from '@/components/layout';
+import TagSelector from '@/components/selector/TagSelector';
 import { useFetchMusicById } from '@/hooks/dashboard/music';
 import { useUploadFile } from '@/hooks/music';
 import { verifyCover } from '@/utils';
@@ -30,14 +31,16 @@ function DMusicEdit() {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [cover, setCover] = useState<string | null | undefined>(initData?.coverUrl);
   const [mp3Url, setMP3Url] = useState<string | null | undefined>(initData?.url);
+  const [tags, setTags] = useState<string[]>([]);
 
   const uploadCover = useUploadFile((url?: string | null) => setCover(url));
   const uploadMP3 = useUploadFile((url?: string | null) => setMP3Url(url));
 
   const onSubmit = (data: MusicUpdateParam) => {
     try {
-      console.log('onSubmit!', { data });
-      updateMusic({ id, data }).then(() => {
+      const tagNames = tags.map((tag) => ({ name: tag }));
+      console.log('onSubmit!', { id, data: { ...data, tags: tagNames } });
+      updateMusic({ id, data: { ...data, tags: tagNames } }).then(() => {
         toast.success('更新成功！');
         console.log({ data });
         router.push('/dashboard/music');
@@ -56,6 +59,7 @@ function DMusicEdit() {
         url: initData?.url,
         coverUrl: initData?.coverUrl,
       });
+      if (initData?.tags) setTags(initData.tags.map((tag) => tag.name));
     }
   }, [initData, isLoading, reset]);
   return (
@@ -90,6 +94,7 @@ function DMusicEdit() {
                   placeholder="音乐标题"
                   {...register('title', { required: true })}
                 />
+                <TagSelector onChange={(values) => setTags(values)} tags={tags} />
                 <TextField error={!!errors?.description} label="音乐描述" multiline minRows={2} {...register('description')} />
                 <TextField error={!!errors?.foreignArtist} required label="歌手名称" {...register('foreignArtist')} />
                 <TextField
