@@ -32,7 +32,7 @@ function NavItem({ selected, icon, name, onClick, className, indicatorClass, typ
       <>
         {userInfo?.type === UserType.ADMIN ? (
           <motion.div variants={itemVariants}>
-            <Button onClick={onClick} variant="contained" size="large" endIcon={<MdSend />}>
+            <Button onClick={onClick} className="whitespace-nowrap py-2" variant="contained" endIcon={<MdSend />}>
               {name}
             </Button>
           </motion.div>

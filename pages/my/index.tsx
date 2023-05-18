@@ -44,7 +44,7 @@ export default function My() {
                 </Button>
               </div>
               <Divider className="my-4" />
-              <div>粉丝 关注 歌单</div>
+              <div>Hello World</div>
             </div>
           </div>
         </Card>
