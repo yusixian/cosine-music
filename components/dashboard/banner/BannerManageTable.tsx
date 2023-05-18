@@ -1,10 +1,10 @@
-import { Tag } from '@/api/type';
+import { Banner } from '@/api/type';
 import EnhancedTableHead, { HeadCell } from '@/components/table/EnhancedTableHead';
 import EnhancedTableToolbar from '@/components/table/EnhancedTableToolbar';
-import { useMutationBatchDeleteTag } from '@/hooks/dashboard/tag';
+import { useMutationBatchDeleteBanner } from '@/hooks/dashboard/banner';
 import { useTableProps, useTableSortProps } from '@/hooks/table';
-import { useFetchTagList } from '@/hooks/tag';
-import { Button, CircularProgress, Pagination, Stack, Table, TableBody, TableCell, TableContainer } from '@mui/material';
+import { useFetchBannerList } from '@/hooks/banner';
+import { Button, Chip, CircularProgress, Pagination, Stack, Table, TableBody, TableCell, TableContainer } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Paper from '@mui/material/Paper';
@@ -16,31 +16,45 @@ import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { MdAdd, MdEdit } from 'react-icons/md';
 import { toast } from 'react-toastify';
+import { BannerStatus } from '@/api/type';
+import { Image } from 'antd';
 
-const headCells: readonly HeadCell<Tag>[] = [
+const headCells: readonly HeadCell<Banner>[] = [
   {
     id: 'id',
     numeric: false,
     disablePadding: true,
-    label: '标签ID',
+    label: '轮播图ID',
   },
   {
-    id: 'name',
+    id: 'title',
     numeric: true,
     disablePadding: false,
-    label: '标签名称',
+    label: '标题',
   },
   {
-    id: 'color',
+    id: 'description',
     numeric: true,
     disablePadding: false,
-    label: '标签颜色',
+    label: '描述',
   },
   {
-    id: 'icon',
+    id: 'url',
     numeric: true,
     disablePadding: false,
-    label: '标签图标',
+    label: '图片',
+  },
+  {
+    id: 'href',
+    numeric: true,
+    disablePadding: false,
+    label: '链接',
+  },
+  {
+    id: 'status',
+    numeric: true,
+    disablePadding: false,
+    label: '状态',
   },
   {
     id: 'createdAt',
@@ -56,9 +70,9 @@ const headCells: readonly HeadCell<Tag>[] = [
   },
 ];
 
-export default function TagManageTable() {
+export default function BannerManageTable() {
   const router = useRouter();
-  const [rows, setRows] = useState<Tag[]>([]);
+  const [rows, setRows] = useState<Banner[]>([]);
 
   const {
     page,
@@ -75,20 +89,20 @@ export default function TagManageTable() {
 
     dense,
     handleChangeDense,
-  } = useTableProps<Tag>({ selectKey: 'id', rows });
+  } = useTableProps<Banner>({ selectKey: 'id', rows });
 
-  const { order, orderBy, handleRequestSort } = useTableSortProps<Tag>({ orderKey: 'id' });
-  const { data, isLoading, refetch } = useFetchTagList({ pageNum: page + 1, pageSize: rowsPerPage, order, orderBy });
+  const { order, orderBy, handleRequestSort } = useTableSortProps<Banner>({ orderKey: 'id' });
+  const { data, isLoading, refetch } = useFetchBannerList({ pageNum: page + 1, pageSize: rowsPerPage, order, orderBy });
 
-  const mutationBatchDelete = useMutationBatchDeleteTag({ onSuccess: () => refetch() });
+  const mutationBatchDelete = useMutationBatchDeleteBanner({ onSuccess: () => refetch() });
 
-  const batchDeleteTag = useCallback(() => {
+  const batchDeleteBanner = useCallback(() => {
     console.log({ selected });
     if (selected.length === 0) {
-      toast.error('请至少选择一个标签');
+      toast.error('请至少选择一个轮播图');
       return;
     }
-    mutationBatchDelete.mutate({ tagIds: selected as number[] });
+    mutationBatchDelete.mutate({ bannerIds: selected as number[] });
   }, [mutationBatchDelete, selected]);
 
   useEffect(() => {
@@ -101,26 +115,26 @@ export default function TagManageTable() {
   return (
     <Stack className="w-full" spacing={2}>
       <div className="flex flex-wrap items-center gap-4">
-        <Button variant="contained" onClick={() => router.push('/dashboard/tag/add')} startIcon={<MdAdd />}>
-          添加标签
+        <Button variant="contained" onClick={() => router.push('/dashboard/banner/add')} startIcon={<MdAdd />}>
+          添加轮播图
         </Button>
         <Button
           variant="outlined"
           onClick={() => {
             if (!selected.length) {
-              toast.error('请至少选择一个标签');
+              toast.error('请至少选择一个轮播图');
               return;
             }
-            router.push(`/dashboard/tag/edit/${selected[0]}`);
+            router.push(`/dashboard/banner/edit/${selected[0]}`);
           }}
           startIcon={<MdEdit />}
         >
-          编辑标签
+          编辑轮播图
         </Button>
         <FormControlLabel control={<Switch checked={dense} onChange={handleChangeDense} />} label="紧密视图" />
       </div>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} onDelete={batchDeleteTag} title="所有标签" />
+        <EnhancedTableToolbar numSelected={selected.length} onDelete={batchDeleteBanner} title="所有轮播图" />
         <TableContainer>
           {isLoading ? (
             <div className="flex w-full items-center justify-center py-8">
@@ -128,7 +142,7 @@ export default function TagManageTable() {
             </div>
           ) : (
             <Table aria-labelledby="tableTitle" size={dense ? 'small' : 'medium'}>
-              <EnhancedTableHead<Tag>
+              <EnhancedTableHead<Banner>
                 headCells={headCells}
                 numSelected={selected.length}
                 order={order}
@@ -163,16 +177,36 @@ export default function TagManageTable() {
                         />
                       </TableCell>
                       <TableCell component="th" id={labelId} scope="row" padding="none">
-                        {row.id}
+                        <div className="w-20">{row.id}</div>
                       </TableCell>
-                      <TableCell align="right">{row.name}</TableCell>
-                      <TableCell align="right">{row.color}</TableCell>
-                      <TableCell align="right">{row.icon}</TableCell>
-                      <TableCell align="center" className="whitespace-pre px-2">
-                        {row.createdAt && dayjs(row.createdAt).format('YYYY-MM-DD\nHH:mm:ss')}
+                      <TableCell align="center">
+                        <div className="w-24">{row.title}</div>
+                      </TableCell>
+                      <TableCell align="center">
+                        <div className="w-24">{row.description}</div>
+                      </TableCell>
+                      <TableCell align="center">
+                        <div className="flex flex-col items-center gap-1">
+                          {row.url} <Image className="h-20" src={row.url} alt={`${row.id} cover`} />
+                        </div>
+                      </TableCell>
+                      <TableCell align="center">
+                        <div className="min-w-20 overflow-auto">{row.href}</div>
+                      </TableCell>
+                      <TableCell align="center">
+                        <div className="w-20">
+                          {row.status === BannerStatus.BANNED ? (
+                            <Chip color="error" label="封禁" />
+                          ) : (
+                            <Chip color="success" label="正常" />
+                          )}
+                        </div>
                       </TableCell>
                       <TableCell align="center" className="whitespace-pre px-2">
-                        {row?.updatedAt && dayjs(row.updatedAt).format('YYYY-MM-DD \nHH:mm:ss')}
+                        <div className="min-w-20">{row.createdAt && dayjs(row.createdAt).format('YYYY-MM-DD\nHH:mm:ss')}</div>
+                      </TableCell>
+                      <TableCell align="center" className="whitespace-pre px-2">
+                        <div className="min-w-20">{row?.updatedAt && dayjs(row.updatedAt).format('YYYY-MM-DD \nHH:mm:ss')}</div>
                       </TableCell>
                     </TableRow>
                   );

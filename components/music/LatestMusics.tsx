@@ -1,11 +1,14 @@
 import MusicCard from '@/components/card/MusicCard';
 import { useFetchPublicMusicList } from '@/hooks/music';
+import { Masonry } from '@mui/lab';
 import { CircularProgress, Pagination } from '@mui/material';
 import { useState } from 'react';
+import { useMediaQuery } from 'react-responsive';
 
 export default function LatestMusics() {
   const [pageNum, setPage] = useState(1);
   const { data, isLoading } = useFetchPublicMusicList({ pageNum, order: 'desc', orderBy: 'createdAt' });
+  const isMdScreen = useMediaQuery({ query: '(max-width: 768px)' });
 
   return (
     <div className="flex flex-col gap-4 pb-20">
@@ -14,11 +17,11 @@ export default function LatestMusics() {
       ) : (
         <>
           {data?.list?.length ? (
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-1">
+            <Masonry columns={isMdScreen ? 1 : 2} spacing={2}>
               {data.list.map((music) => {
                 return <MusicCard key={music.id} music={music} />;
               })}
-            </div>
+            </Masonry>
           ) : null}
           <Pagination
             page={pageNum}

@@ -187,3 +187,38 @@ export type TagUpdateParam = {
 export type TagBatchDeleteParam = {
   tagIds: number[];
 };
+
+export enum BannerStatus {
+  NORMAL = 0,
+  BANNED,
+}
+
+export type Banner = {
+  id: number;
+  title: string; // 轮播图标题
+  description?: string; // 轮播图描述
+  url: string; // 轮播图片路径
+  href?: string; // 轮播图跳转链接
+  status: BannerStatus; // 轮播图状态	0 正常，1 禁用
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type BannerCreateParam = {
+  title: string;
+  description?: string;
+  url: string;
+  href?: string;
+  status?: BannerStatus;
+};
+export type BannerUpdateParam = {
+  title?: string;
+  description?: string;
+  url?: string;
+  href?: string;
+  status?: BannerStatus;
+};
+
+export type BannerBatchDeleteParam = {
+  bannerIds: number[];
+};

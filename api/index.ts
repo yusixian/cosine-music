@@ -1,6 +1,10 @@
 import { toast } from 'react-toastify';
 import request, { postFormData } from './request';
 import {
+  Banner,
+  BannerBatchDeleteParam,
+  BannerCreateParam,
+  BannerUpdateParam,
   LoginParam,
   LoginResult,
   MusicAuditParam,
@@ -92,9 +96,29 @@ export const createTag = (data: TagCreateParam) => request.post<any, Response<Ta
 // 获取标签详情
 export const fetchTagById = (id?: string) => request.get<any, Response<Tag>>(`/tag/detail/${id}`);
 
-// 更新音乐
+// 更新标签
 export const updateTag = ({ id, data }: { id?: string; data: TagUpdateParam }) =>
   request.put<any, Response<Tag>>(`/tag/update/${id}`, data);
 
 // 删除标签 - 批量
 export const deleteBatchTag = (data: TagBatchDeleteParam) => request.post<any, Response<undefined>>(`/tag/batch/delete`, data);
+
+// 轮播图
+// 获取轮播图列表
+export const fetchBannerList = ({ pageNum, pageSize = 30, order, orderBy }: PaginateProps & SortProps) =>
+  request.get<any, Response<PaginatedData<Banner>>>('/banner/all', {
+    params: { pageNum, pageSize, order, orderBy },
+  });
+
+export const createBanner = (data: BannerCreateParam) => request.post<any, Response<Banner>>('/banner/create', data);
+
+// 获取轮播图详情
+export const fetchBannerById = (id?: string) => request.get<any, Response<Banner>>(`/banner/detail/${id}`);
+
+// 更新轮播图
+export const updateBanner = ({ id, data }: { id?: string; data: BannerUpdateParam }) =>
+  request.put<any, Response<Banner>>(`/banner/update/${id}`, data);
+
+// 删除轮播图 - 批量
+export const deleteBatchBanner = (data: BannerBatchDeleteParam) =>
+  request.post<any, Response<undefined>>(`/banner/batch/delete`, data);

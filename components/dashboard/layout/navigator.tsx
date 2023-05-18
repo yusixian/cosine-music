@@ -18,7 +18,7 @@ const routers: {
   type?: UserType.ADMIN;
 }[] = [
   { name: '仪表盘', path: '/' },
-  { name: '首页管理', path: '/home' },
+  { name: '首页管理', path: '/banner' },
   { name: '音乐管理', path: '/music' },
   { name: '标签管理', path: '/tag' },
   // { name: '歌单管理', path: '/playlist' },
