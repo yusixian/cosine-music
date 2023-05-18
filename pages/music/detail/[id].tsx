@@ -33,7 +33,7 @@ function MusicDetail() {
               {title}
             </Typography>
             <Typography variant="subtitle1" color="text.secondary" component="div">
-              说明：{description}
+              {description}
             </Typography>
             <Typography component="div" className="text-base text-gray-400">
               歌手： {foreignArtist}
