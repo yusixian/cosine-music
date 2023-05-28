@@ -68,8 +68,14 @@ export const fetchPublicMusicList = ({
     params: { pageNum, pageSize, order, orderBy, tagNames },
   });
 
+// 获取猜你喜欢音乐列表
+export const fetchRecommendMusicList = ({ pageNum, pageSize, order, orderBy }: PaginateProps & SortProps & MusicWhereOpt) =>
+  request.get<any, Response<MusicDetail[]>>('/music/recommend/list', {
+    params: { pageNum, pageSize, order, orderBy },
+  });
+
 // 获取音乐详情
-export const fetchMusicDetail = (id?: string) => request.get<any, Response<MusicDetail>>(`/music/detail/${id}`);
+export const fetchMusicDetail = (id?: string) => request.get<any, Response<MusicDetail>>(`/music/detail/public/${id}`);
 
 // 更新音乐
 export const updateMusic = ({ id, data }: { id?: string; data: MusicUpdateParam }) =>

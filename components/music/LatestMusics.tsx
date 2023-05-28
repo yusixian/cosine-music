@@ -1,7 +1,7 @@
 import MusicCard from '@/components/card/MusicCard';
 import { useFetchPublicMusicList } from '@/hooks/music';
 import { Masonry } from '@mui/lab';
-import { CircularProgress, Pagination } from '@mui/material';
+import { CircularProgress, Pagination, Typography } from '@mui/material';
 import { useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 
@@ -12,6 +12,9 @@ export default function LatestMusics() {
 
   return (
     <div className="flex flex-col gap-4 pb-20">
+      <Typography variant="h5" className="text-2xl font-bold">
+        新歌速递
+      </Typography>
       {isLoading ? (
         <CircularProgress />
       ) : (

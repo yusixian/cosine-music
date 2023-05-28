@@ -1,4 +1,4 @@
-import { fetchPublicMusicList, updateMusicPlayCount, uploadFile } from '@/api';
+import { fetchPublicMusicList, fetchRecommendMusicList, updateMusicPlayCount, uploadFile } from '@/api';
 import { useCallback, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useIsMounted } from './useIsMounted';
@@ -75,6 +75,27 @@ export const useFetchPublicMusicList = ({
           return res.result;
         }
         toast.error(res?.message || '获取音乐列表失败！');
+        return null;
+      },
+    },
+  );
+};
+
+export const useFetchRecommendMusicList = ({
+  pageNum,
+  pageSize,
+  order,
+  orderBy,
+}: PaginateProps & SortProps & MusicWhereOpt) => {
+  return useQuery(
+    ['get_recommend_music_list', pageNum, pageSize, order, orderBy],
+    () => fetchRecommendMusicList({ pageNum, pageSize, order, orderBy }),
+    {
+      select: (res) => {
+        if (res.code === Code.success) {
+          return res.result;
+        }
+        toast.error(res?.message || '获取猜你喜欢音乐列表失败！');
         return null;
       },
     },

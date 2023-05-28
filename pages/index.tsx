@@ -1,8 +1,9 @@
-import MusicCard from '@/components/card/MusicCard';
 import Carousel from '@/components/carousel';
 import LatestMusics from '@/components/music/LatestMusics';
+import RecommendMusics from '@/components/music/RecommendMusics';
 import { useFetchBannerList } from '@/hooks/banner';
-import { CircularProgress, Typography } from '@mui/material';
+import { CircularProgress } from '@mui/material';
+import clsx from 'clsx';
 import { motion } from 'framer-motion';
 
 export default function Home() {
@@ -23,23 +24,27 @@ export default function Home() {
         <CircularProgress />
       ) : (
         <Carousel interval={1500} wrapperClass="flex items-center justify-center" width={1024} height={398}>
-          {data?.list?.map(({ id, title, url }) => (
-            <img src={url} width={1024} height={398} alt={title} key={id} />
+          {data?.list?.map(({ id, title, url, href }) => (
+            <img
+              onClick={() => {
+                href && window.open(href, '_blank');
+              }}
+              src={url}
+              width={1024}
+              height={398}
+              alt={title}
+              key={id}
+              className={clsx({ 'cursor-pointer': href })}
+            />
           ))}
         </Carousel>
       )}
-      <div className="grid w-full grid-cols-4 items-stretch gap-4 md:grid-cols-1">
-        <div className="col-span-3 flex flex-col gap-4 md:col-span-1">
-          <Typography variant="h5" className="text-2xl font-bold">
-            新歌速递
-          </Typography>
+      <div className="grid w-full grid-cols-3 items-stretch gap-4 md:grid-cols-1">
+        <div className="col-span-2 flex flex-col gap-4 md:col-span-1">
           <LatestMusics />
         </div>
-        <div className="flex flex-col gap-4">
-          <Typography variant="h5" className="text-2xl font-bold">
-            猜你喜欢
-          </Typography>
-          <MusicCard />
+        <div className="col-span-1 flex flex-col gap-4 md:col-span-1">
+          <RecommendMusics />
         </div>
       </div>
     </motion.div>
